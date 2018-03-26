@@ -1,0 +1,90 @@
+package com.gja.gestionCasos.listaArchivos;
+
+import java.util.List;
+
+import javax.persistence.Query;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
+import org.springframework.stereotype.Repository;
+
+import com.gja.gestionCasos.listaArchivos.entities.ListaArchivos;
+import com.sf.social.signinmvc.user.model.User;
+import com.sf.util.BusinessException;
+import com.sf.util.DAOException;
+import com.sf.util.repository.AbstractRepository;
+
+@Repository("listaArchivosRepository")
+public class ListaArchivosRepositoryImpl extends AbstractRepository<ListaArchivos> implements ListaArchivosRepository {
+
+	
+	@Override
+	public List<ListaArchivos> getAllArchivos(String nombreArchivo, int displayStart, int displayLength, String sSearch) throws DAOException {
+		List<ListaArchivos> listaArchivosReturn = null;
+		StringBuilder stringBuilder = new StringBuilder();
+		
+		try {
+			stringBuilder.append ("SELECT e FROM ListaArchivos e ");
+				if (sSearch != null && !sSearch.isEmpty()) {
+					stringBuilder.append(" WHERE e.nombreArchivo LIKE :pNombre or e.descripcion like :pDescripcion");
+				}
+				
+				stringBuilder.append("  ORDER BY e.idArchivo");
+			
+				Query query =  entityManager.createQuery(stringBuilder.toString());
+				
+				if (sSearch != null && !sSearch.isEmpty()) {
+					query.setParameter("pNombre", "%" + sSearch + "%");
+					query.setParameter("pDescripcion", "%" + sSearch + "%");
+					
+				}
+			
+			listaArchivosReturn =  query.setFirstResult(displayStart).setMaxResults(displayLength).getResultList();
+		} catch (Exception e) {
+			throw new DAOException(e.getMessage(), e);
+		}
+		return listaArchivosReturn;
+	}
+	
+	@Override
+	public Long getCantidadArchivos(String nombreArchivo, int displayStart, int displayLength, String sSearch) throws DAOException {
+		Long cantidadArchivos = null;
+		StringBuilder stringBuilder = new StringBuilder();
+		
+		try {
+			stringBuilder.append ("SELECT count(e) FROM ListaArchivos e ");
+			if (sSearch != null && !sSearch.isEmpty()) {
+				stringBuilder.append(" WHERE e.nombreArchivo LIKE :pNombre or e.descripcion like :pDescripcion");
+			}
+				
+				stringBuilder.append("  ORDER BY e.idArchivo");
+			
+				Query query =  entityManager.createQuery(stringBuilder.toString());
+				
+				if (sSearch != null && !sSearch.isEmpty()) {
+					query.setParameter("pNombre", "%" + sSearch + "%");
+					query.setParameter("pDescripcion", "%" + sSearch + "%");
+					
+				}
+			
+			cantidadArchivos =  (Long)query.getSingleResult();
+		} catch (Exception e) {
+			throw new DAOException(e.getMessage(), e);
+		}
+		return cantidadArchivos;
+	}
+	
+	
+	@Override
+	public ListaArchivos guardarArchivo(ListaArchivos listaGuardarArchivo) throws DAOException,
+	BusinessException {
+		entityManager.merge(listaGuardarArchivo);
+		return listaGuardarArchivo;
+	}
+	@Override
+	public ListaArchivos find(int id) throws DAOException,
+	BusinessException {
+		return entityManager.find(ListaArchivos.class,id);
+	}
+
+}

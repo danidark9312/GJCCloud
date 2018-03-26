@@ -1,0 +1,27 @@
+#Database Configuration
+db.driver=com.mysql.jdbc.Driver
+#db.url=jdbc:mysql://localhost:3306/gja?characterEncoding=utf8
+db.url=jdbc:mysql://10.2.2.6:3306/gjasprint3?characterEncoding=utf8
+#db.url=jdbc:mysql://desarrollador04:3306/gja?characterEncoding=utf8
+db.username=diego
+#db.username=admin
+db.password=123456
+#db.password=23241737
+
+
+
+#Hibernate Configuration
+hibernate.dialect=org.hibernate.dialect.MySQL5InnoDBDialect
+hibernate.format_sql=true
+hibernate.hbm2ddl.auto=validate
+hibernate.ejb.naming_strategy=org.hibernate.cfg.ImprovedNamingStrategy
+hibernate.show_sql=true
+
+#Facebook
+facebook.app.id=553555631418228
+facebook.app.secret=0459ba4b4e6c0e9d5eb98f57bcec4ed7
+
+
+#Twitter
+twitter.consumer.key=EQ4LrqIls5plKvARUiYg
+twitter.consumer.secret=qkgYVSWNmdn1NvgwnKEPNsR3LyRyeLFDta4kH0YyyQ

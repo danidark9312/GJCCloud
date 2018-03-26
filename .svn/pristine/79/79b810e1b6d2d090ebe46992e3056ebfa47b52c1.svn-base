@@ -1,0 +1,527 @@
+software.title=GJA
+software.welcome=Bienvenido!
+software.welcome.message=Este aplicativo le permitira medir el potencial humano en el desarrollo de las tareas de su capital humano
+software.footer.corto=Grupo Jurídico de Antioquia
+software.footer=MÓDULO WEB 2016 - Grupo Jurídico de Antioquia - Todos los derechos reservados.
+software.footer.version=V.1.8
+button.label.login=Ingresar
+button.label.nuevoCaso=Nuevo caso
+label.label.olvidarContrasenia=Olvido su contraseña?
+label.label.cambiarContrasenia= Cambiar su contraseña 
+##Menu
+label.menu.administradores.actividades=Actividades
+label.menu.administradores.cambiarContrasena=Contraseña
+label.menu.administradores.roles=Roles
+label.menu.administradores.salir=Salir
+label.menu.administradores.tipoCaso=Tipos caso
+label.menu.administradores.usuarios=Usuarios
+label.menu.casos.visorCaso=Visor de casos
+label.menu.title.inicio=Inicio
+label.menu.title.casos=Casos
+label.menu.title.administradores=Administradores
+label.menu.title.reportes=Reportes
+label.menu.reportes.audiencias=Audiencias
+label.menu.reportes.caducidadCasos=Caducidad casos
+label.menu.reportes.documentosPendientes=Documentos pendientes
+label.menu.reportes.recursosPendientes=Recursos pendientes
+label.menu.reportes.tareasProximoVencimiento=Tareas pr\u00f3ximas a vencer
+label.menu.contrasena.input.contrasenaAnterior=Contraseña anterior
+label.menu.contrasena.input.contrasenaConfirmacion=Confimar contraseña
+label.menu.contrasena.input.contrasenaNueva=Contraseña nueva
+label.menu.contrasena.msj.contrasenaIncorrecta=Contraseña Anterior incorrecta.
+label.menu.contrasena.msj.noCoinciden=Las contraseñas no coinciden.
+label.subMenu.maestro.alerta= Escalamiento de Notificación
+
+# Index
+label.campo.indexUltimosCasoPublicados=Últimos casos publicados
+
+#Menu nuevo caso
+label.campo.nuevoCaso=Nuevo Caso
+label.campo.estadoCaso=Estado del caso
+label.campo.tipoCaso=Tipo del caso
+label.campo.nombreCaso=Nombre del caso
+label.campo.nombreVictima=Nombre de la victima
+label.campo.agregarVictima=Agregar victima
+label.campo.fechaDeLosHechos=Fecha inicio de los hechos
+label.campo.fechaFinDeLosHechos=Fecha fin de los hechos
+label.campo.fechaDeCaducidad=Fecha de caducidad
+label.campo.paisDeLosHechos=País de los hechos
+label.campo.departamentoDeLosHechos=Departamento de los hechos
+label.campo.municipioDeLosHechos=Municipio de los hechos
+label.campo.direccionDeLosHechos=Lugar de los hechos
+label.campo.resumenDeLosHechos=Resumen de los hechos
+label.campo.comentarios=Comentarios/Observaciones
+label.modal.otroResponsable=Otro responsable
+label.campo.seleccionar=Seleccionar
+label.victima.victima=Victima
+label.victima.demandante=Demandante
+label.victima.padre=Padre
+label.victima.hermano=Hermano
+
+
+#Menu nuevo caso-demandados 
+label.campo.nombreJuridico=Nombre
+label.campo.agregarDemandado=Agregar
+label.campo.tipoDePersona=Tipo de Persona
+label.campo.personaJuridica=Persona Jurídica
+label.campo.personaNatural=Persona Natural
+label.campo.paisDemandado=País
+label.campo.departamentoDemandado=Departamento
+label.campo.municipioDemandado=Municipio
+label.campo.direccionDemandado=Dirección
+label.campo.correoDemandado=Correo
+label.campo.observacionesMiembro=Notas/observaciones
+
+label.Actividad.particular.nombre=Actividad
+
+#Menu nuevo caso-demandantes/victimas
+label.info.equipoCaso=Recuerde agregar al menos una victima y un demandante
+label.campo.tipoDeMiembro=Tipo de Miembro 
+label.campo.esContacto=Marcar como Contacto
+label.campo.nombresMiembro=Nombres
+label.campo.apellidosMiembro=Apellidos
+label.campo.identificacionDeMiembro=Número de Identificación
+label.campo.direccionDeMiembro=Descripci\u00F3n
+label.campo.parentescoDeMiembro=Parentesco
+label.campo.telefonoMiembro=Tel\u00E9fono
+label.campo.celularMiembro=Celular
+label.campo.correoMiembro=Email
+label.campo.agregarTelefonoMiembro=Agregar
+label.campo.agregarCelularMiembro=Agregar
+label.campo.agregarCorreoMiembro=Agregar
+label.campo.agregarVictimaDemandante=Agregar
+
+#Menu nuevo caso-Abogados
+label.info.abogados=Recuerde agregar al menos un abogado
+label.campo.abogadosDelCaso=Añadir Abogados al Caso
+
+#Menu nuevo caso lugar y despacho
+label.campo.paisHecho=País
+label.campo.departamentoHecho=Departamento
+label.campo.municipioHecho=Municipio
+label.campo.numeroDespacho=Número/Entidad
+label.campo.nombreFuncionario=Nombre Funcionario
+
+
+#Menu nuevo caso Bienes afectados
+label.campo.claseBien=Clase de Bien
+label.campo.tituloBien=Título
+label.campo.descripcionBien=Descripción
+label.campo.agregarBien=Agregar
+
+#Menu nuevo caso Radicado
+label.campo.numeroRadicado=Número Radicado
+label.campo.instanciaRadicado=Instancia
+label.campo.radicadoAcomulado=Acumulado
+label.campo.esAcumulado=Acumulado
+label.campo.acomuladoCon=Acumulado Con
+label.campo.acomuladoObservaciones=Observaciones
+label.campo.numeroDeRadicadoPadre=Número de Radicado con el que se acumula
+label.campo.externo=Externo
+label.campo.gja=GJA
+label.campo.select=Select
+
+#Menu Nuevo Caso Prestamos
+#label.campo.AgregarPrestamo=Agregar Préstamo
+label.campo.nombreDeudor=Nombre Deudor
+label.campo.identificacionDeudor=Identificación
+label.campo.descripcionPrestamo=Descripción del Préstamo
+label.campo.fechaPrestamo=Fecha del Préstamo
+label.campo.valorPrestamo=Valor del Préstamo
+label.campo.porcentajeInteresPrestamo=% de Interés
+label.campo.intereses=Intereses
+label.campo.saldoPrestamo=Saldo Prestamo
+label.campo.entidadFinanciera=Entidad
+label.campo.numeroDeCuenta=Número De Cuenta
+label.campo.tipoDeCuenta=Tipo De Cuenta
+label.campo.tituloValor=Título Valor
+label.campo.archivoPrestamo=Archivo
+
+#Modal Confirmacion
+label.title.confirmacion=¿Esta seguro que desea eliminar la actividad?
+label.title.confirmacion.Tarea=¿Esta seguro que desea eliminar la tarea?
+
+#Modales Confirmación Eliminación
+label.title.confirmacion.Actividad=¿Esta seguro que desea eliminar la actividad?
+label.button.confirmacionTarea.cancelar=Cancelar
+
+
+#label Detalle Caso
+label.detalleCaso.inicio=Inicio
+label.detalleCaso.casos=Casos
+label.detalleCaso.visorCaso=Visor Caso
+label.detalleCaso.visorCasos=Visor de Casos
+label.detalleCaso.tituloPestanaCasoDetalle=Detalle del caso
+label.detalleCaso.estadoActual=Estado actual
+label.detalleCaso.nombreCaso=Nombre Caso:
+label.detalleCaso.responsablesCaso=Responsables del Caso:
+label.detalleCaso.tipoCaso=Caso Tipo:
+label.detalleCaso.tiposCasos=Tipos de caso
+label.detalleCaso.inicioHechos=Inicio de los hechos:
+label.detalleCaso.despacho=Número/Entidad:
+label.detalleCaso.fechaCaducidad=Fecha Caducidad:
+label.detalleCaso.funcionario=Nombre Funcionario:
+label.detalleCaso.resumenHecho=Resumen de los hechos:
+label.detalleCaso.estadoProcesal=Estado Procesal:
+label.detalleCaso.fechaActualizacion=Fecha y hora Actualizaci\u00F3n:
+label.detalleCaso.lugarHechos=Lugar Hechos
+label.detalleCaso.pais=País:
+label.detalleCaso.departamento=Departamento:
+label.detalleCaso.municipio=Municipio:
+label.detalleCaso.dirreccion=Dirección:
+label.detalleCaso.lugarProceso= Lugar Proceso
+label.detalleCaso.estadoProceso=Estado:
+label.detalleCaso.descripcion=Descripción:
+label.detalleCaso.bienesTitulo=Bienes Afectados
+label.detalleCaso.tituloRadicado=Radicado
+label.detalleCaso.numeroRadicado=Número Radicado:
+label.detalleCaso.instancia=Instancia:
+label.detalleCaso.telefono=Teléfono:
+label.detalleCaso.celular=Celular:
+label.detalleCaso.direccion=Dirección:
+label.detalleCaso.correo=Correo:
+label.detalleCaso.tarea=Tarea
+label.detalleCaso.detalle=Detalle
+label.detalleCaso.responsable=Responsable
+label.detalleCaso.estado=Estado
+label.detalleCaso.numeroDias=Número de días
+label.detalleCaso.numeroNotificaciones=Número de notificaciones
+label.detalleCaso.fechaVencimiento=Fecha vencimiento
+label.detalleCaso.accion=Acción
+label.detalleCaso.completada=Completada
+label.detalleCaso.pendiente=Pendiente
+label.detalleCaso.vencida=Vencida
+label.detalleCaso.filtrar=Filtrar
+label.detalleCaso.limpiar=Limpiar
+
+label.maestroActividad.accion=Acción
+label.maestroActividad.titulo=Actividades
+label.maestroActividad.actividad=Actividad
+label.maestroActividad.nombre=Nombre
+label.maestroActividad.tarea=Tarea
+label.maestroActividad.detalleTarea=Detalle
+label.maestroActividad.adicionarTarea=Adicionar Tarea
+label.maestroActividad.mensajeEliminarActividad=¿Esta seguro que desea eliminar la actividad?
+label.maestroActividad.mensajeEliminarTarea=¿Esta seguro que desea eliminar la tarea?
+label.maestroActividad.tituloActividad=Actividad
+label.maestroActividad.mensajeEliminarTareaNoEliminar=No se puede eliminar la Tarea porque esta siendo usada en un Caso
+label.maestroActividad.mensajeEliminarActividadNoEliminar=No se puede eliminar la Actividad porque esta siendo usada en un Caso
+label.maestroActividad.mensajeEliminarTareaNoModificar=No se puede modificar la tarea porque esta siendo usada en un Caso
+label.maestroActividad.mensajeEliminarActividadNoModificar=No se puede modificar la Actividad porque esta siendo usada en un Caso
+label.maestroActividad.salir=Salir
+label.maestroActividad.cancelar=Cancelar
+label.maestroActividad.eliminar=Eliminar
+label.maestroActividad.continuar=Continuar
+label.maestroActividad.nombreCompleto=Nombre Actividad
+label.maestroActividad.asociar=Asociar Actividad
+label.maestroActividad.botonNuevo=Nueva actividad
+label.maestroActividad.continuar=Continuar
+label.maestroActividad.filtrar=Filtrar
+label.maestroActividad.limpiar=Limpiar
+
+label.maestroTipoCaso.estado=Estado
+label.maestroTipoCaso.titulo=Tipo Caso
+label.maestroSi=S
+label.maestroTipoCaso.nombre=Nombre
+label.maestroTipoCaso.adicionarActividad=Agregar Actividad
+label.maestroTipoCaso.asociarTipoCaso=Tipo Caso
+label.maestroTipoCaso.existeTipoCaso=El tipo de caso ingresado ya existe.
+label.maestroTipoCaso.noHayTipoCaso=No se encontraron tipos de casos para los parámetros de búsqueda ingresados.
+label.maestroTipoCaso.noInactivarTipoCaso=No se puede Inactivar el Tipo de caso debido a que tiene casos Asociados.
+label.maestroTipoCaso.noEliminarTipoCaso=No se puede Eliminar  el Tipo de caso debido a que tiene casos Asociados.
+label.maestroTipoCaso.activoTipoCaso=Activo
+label.maestroTipoCaso.inactivoTipoCaso=Inactivo
+label.maestroTipoCaso.mensajeEliminarTipoCaso=¿Esta seguro que desea eliminar el tipo de caso?
+label.maestroTipoCaso.mensajeEliminarActividad=¿Esta seguro que desea eliminar la actividad?
+label.maestroTipoCaso.actividad=Actividad
+label.maestroTipoCaso.salir= Salir
+label.maestroTipoCaso.cancelar=Cancelar
+label.maestroTipoCaso.eliminar=Eliminar
+label.maestroTipoCaso.botonNuevo=Nuevo tipo caso
+label.mensaje.login=COMPROMETIDOS CON LA MEJOR ASISTENCIA LEGAL PARA LA EXCELENCIA PROFESIONAL
+
+
+#label titulos roles
+label.maestroRoles.accion=acción
+label.maestroRoles.accionCrear=Crear
+label.maestroRoles.accionEliminar=Eliminar
+label.maestroRoles.accionEscribir=Escribir
+label.maestroRoles.accionLeer=Leer
+label.maestroRoles.accionRestaurar=Restaurar
+label.maestroRoles.titulo=Roles
+label.maestroRoles.rol=Rol
+label.maestroRoles.nombre=Nombre
+label.maestroRoles.detalleRol=Detalle
+label.maestroRoles.estadoRol=Estado
+label.maestroRoles.adicionarRol=Adicionar Rol
+label.maestroRoles.mensajeEliminarRol=¿Está seguro que desea eliminar el rol?
+label.maestroRoles.mensajeEliminarRolNoEliminar=No se puede eliminar el rol porque esta asignado a un usuario
+label.maestroRoles.mensajeEliminarRolNoModificar=No se puede modificar el rol porque esta asignado a un usuario
+label.maestroRoles.opcion=Opción
+label.maestroRoles.salir= Salir
+label.maestroRoles.guardar= Guardar
+label.maestroRoles.cancelar=Cancelar
+label.maestroRoles.eliminar=Eliminar
+label.maestroRoles.nombreCompleto=Nombre rol
+label.maestroRoles.asociar=Asociar rol
+label.maestroRoles.botonNuevo=Nuevo rol
+label.maestroRoles.botonElminar=Eliminar rol
+label.maestroRoles.continuar=Continuar
+label.maestroRoles.filtrar=Filtrar
+label.maestroRoles.limpiar=Limpiar
+
+#label maestro usuario
+label.maestroUsuario.accion=acción
+label.maestroUsuario.accionCrear=Crear
+label.maestroUsuario.accionEliminar=Eliminar
+label.maestroUsuario.accionEscribir=Escribir
+label.maestroUsuario.accionLeer=Leer
+label.maestroUsuario.accionRestaurar=Restaurar
+label.maestroUsuario.apellido=Apellido *
+label.maestroUsuario.iniciales=Iniciales
+label.maestroUsuario.asociar=Asociar usuario
+label.maestroUsuario.botonNuevo=Nuevo usuario
+label.maestroUsuario.cancelar=Cancelar
+label.maestroUsuario.cedula=Cédula *
+label.maestroUsuario.contrasena=Contraseña *
+label.maestroUsuario.continuar=Continuar
+label.maestroUsuario.correo=Correo *
+label.maestroUsuario.eliminar=Eliminar
+label.maestroUsuario.filtrar=Filtrar
+label.maestroUsuario.guardar=Guardar
+label.maestroUsuario.limpiar=Limpiar
+label.maestroUsuario.detalleUsuario=Detalle
+label.maestroUsuario.estadoUsuario=Estado 
+label.maestroUsuario.adicionarUsuario=Adicionar usuario
+label.maestroUsuario.mensajeEliminarUsuario=¿Está seguro que desea eliminar el usuario?
+label.maestroUsuario.mensajeEliminarUsuarioNoEliminar=No se puede eliminar el usuario porque ...
+label.maestroUsuario.mensajeEliminarUsuarioNoModificar=No se puede modificar el usuario porque ...
+label.maestroUsuario.nombre=Nombre *
+label.maestroUsuario.nombreCompleto=Nombre usuario
+label.maestroUsuario.direccion=Direccion *
+label.maestroUsuario.celular=Celular
+label.maestroUsuario.telefono=Telefono * 
+label.maestroUsuario.opcion=Opción
+label.maestroUsuario.rol=Rol 
+label.maestroUsuario.salir=Salir
+label.maestroUsuario.tarjetaProfesional=Tarjeta profesional
+label.maestroUsuario.titulo=Usuarios
+label.maestroUsuario.usuario=Usuario
+label.maestroUsuario.FechaNacimiento=Fecha de Nacimiento
+label.maestroUsuario.Tipodocumento=Tipo de Documento
+label.maestroEscalamientoNotificacion.titulo= Escalamiento de Notificación
+
+#label titulos nuevo caso
+label.titulo.equipoCaso=Equipo del Caso
+label.titulo.abogados=Abogados
+label.titulo.demandados=Demandados
+label.titulo.actividades=Actividades
+label.titulo.lugarDespacho=Lugar del Proceso
+label.titulo.despacho=Despacho del Proceso
+label.titulo.bienesAfectados=Bienes Afectados
+label.titulo.radicados=Radicados
+label.titulo.prestamos=Pr\u00E9stamo
+label.titulo.comentario=Comentarios
+label.titulo.procesoDespacho=Despacho del Proceso
+
+label.title.finalizacion.Sesion=La sesión finalizará en 
+label.boton.finalizacion.Sesion=Aceptar
+
+label.mensaje.loguin=\u200B\u200BCOMPROMETIDOS CON LA MEJOR ASISTENCIA <br> LEGAL PARA LA EXCELENCIA PROFESIONAL
+
+
+#Modificar estado Caso
+label.boton.cancelar=Cancelar
+label.boton.guardar=Guardar
+label.campo.justificacion=Justificación
+label.modal.modificarEstado=Modificar Estado del Caso
+
+#Modificar detalle caso
+button.label.modificarDetalle=Modificar Detalle
+label.modal.modificarDetalleCaso=Modificar Detalle del Caso
+label.title.confirmacion.tipoCaso=¿Está seguro de que desea cambiar el tipo de Caso?
+label.title.confirmacion.fechaHechos=¿Está seguro de que desea cambiar la fecha de los hechos?
+
+#modificar equipo caso
+label.modal.modificarMiembroDelCaso=Equipo del Caso
+label.title.confirmacion.miembro=¿Esta seguro que desea eliminar al miembro del equipo?
+label.title.confirmacion.miembro.justificacion=Justificación
+label.title.nuevo.responsable=Por favor seleccione otro abogado responsable del caso.
+label.campo.seleccionarImagen=Seleccionar Foto	
+label.campo.cambiarImagen=Cambiar
+label.campo.removerImagen=Remover
+label.title.nuevo.contacto=Nuevo contacto
+lable.modal.adicionarMiembroDelCaso=Miembro Equipo del Caso
+label.adicionar.miembro=Adicionar Miembro
+
+#modificar Radicados
+label.modal.modificarRadicado=Radicado
+label.title.confirmacion.radicado=¿Esta seguro que desea eliminar el radicado?
+label.title.confirmacion.miembro.radicado=Justificación
+
+#modificar Actividades y tareas
+label.boton.agregarActividad=Agregar Actividad
+label.campo.fechaVencimientoActividad=Fecha Vencimiento
+label.campo.estadoActividad=Estado Actividad
+label.campo.numeroDeDias=Número de días
+label.campo.numeroDeDiasAntes=Número de días antes
+label.campo.numeroDeNotificaciones=Número de Notificaciones
+label.campo.numeroDeNotificacionesDia=Número de notificaciones al día
+label.modal.agregarActividad=Agregar Actividad
+label.title.confirmacion.tarea=¿Esta seguro que desea eliminar la tarea?
+label.title.tarea.justificacion=Justificación
+label.title.confirmacion.actividad=¿Esta seguro que desea eliminar la actividad?
+label.title.actividad.justificacion=Justificación
+label.title.confirmacion.fechaLimite=¿Esta seguro que desea ampliar la fecha para finalizar la Actividad y/o Tarea?
+label.title.modal.alarmas=Configuraci\u00F3n Alarmas
+label.title.confirmacion.estado.actividad=Esta a punto de completar la actividad, esto cambiara todas las tareas a finalizadas ¿desea continuar?
+label.title.modal.alertas=Coniguraci\u00F3n Alertas
+
+#modificar Bienes Afectados
+label.title.confirmacion.bienesAfectados=¿Esta seguro que desea eliminar el bien afectado?
+
+#informacio Caso OffLine
+label.titulo.casoOffnile=Casos OffLine
+label.titulo.casoOff=Casos
+label.boton.cargar=Cargar
+
+#mensajes papelera
+label.papelera.titulo.actividad=Actividad
+label.papelera.titulo.nombre.caso=Caso
+label.papelera.titulo.nombre.tareas=Ver tareas
+label.papelera.titulo.nombre.accion=Acciones
+label.title.confirmacion.continuar=Debe cambiar la actividad a estado activo, antes de continuar ¿Desea hacerlo?
+label.title.papelera.tab.actividades=Actividades y tareas
+label.title.papelera=Papelera
+label.title.filter.nombrecaso=Nombre del caso
+
+
+#parametros Asociar Archivos
+label.archivo.asociar=Asociar Archivo
+
+
+#notificaciones alertas
+label.alertas.roles.estado=Estado
+label.alertas.roles.rol=Rol
+label.alertas.numero.diasAntes=Número de días antes
+label.alertas.numero.diasDespues=Número de días después
+label.alertas.numero.notificacionesDia=Número de notificaciones al día
+label.alertas.antesDe=Alertas antes del vencimiento de tarea
+label.alertas.despuesDe=Alertas después del vencimiento de tarea
+
+#modificar bien afectado
+label.modificar.bienAfectado=Bien Afectado
+label.modificar.bienAfectado.nombre=T\u00EDtulo
+label.modificar.bienAfectado.descripcion= Descripción
+label.modificar.bienAfectado.tipo=Clase de Bien
+
+#parametro pestaña
+label.pestana.detalle=Detalle del caso
+label.pestana.equipoCaso=Equipo del caso
+label.pestana.actividades=Actividades
+label.pestana.confidencial=Confidencial
+
+
+#parametros Prestamo
+label.titulo.prestamo=Prestamos
+
+#Modificar Adicionar Prestamo
+label.modificar.prestamo=Modificar prestamo
+label.adicionar.prestamo=Nuevo Prestamo
+
+#mensajes reportes
+label.filter.reportes.estado=Estado
+label.filter.reportes.responsables=Responsables
+label.filter.reportes.nombreCaso=Caso
+label.filter.reportes.palabraClave=Victima
+label.filter.reportes.fechaInicio=Fecha inicio
+label.filter.reportes.fechaFin=Fecha fin
+label.filter.reportes.radicado=Radicado
+label.filter.reportes.dias=Filtrar \u00FAltimos
+label.title.reportes.audiencia=Audiencias
+label.title.reportes.auditoria=Auditoria
+label.title.reportes.auditoria.modulo=Modulo
+label.title.reportes.auditoria.informacion=Informacion Eliminada
+label.title.reportes.auditoria.usuario=Usuario
+label.title.reportes.auditoria.fechaEliminacion=Fecha de Eliminacion
+label.title.reportes.auditoria.justificacion=Justificacion
+label.title.reportes.caducidadCasos=Caducidad de casos
+label.title.reportes.recursosPendientes=Recursos pendientes
+label.title.reportes.documentosPendientes=Documentos pendientes
+label.title.reportes.tareasProximoVencimiento=Tareas pr\u00f3ximas a vencer
+label.title.reportes.reportes=Reportes
+label.title.reportes.tareasProximoVencimiento.tarea=Tarea
+label.title.reportes.tareasProximoVencimiento.responsables=Responsables
+label.title.reportes.tareasProximoVencimiento.fechaVencimiento=Fecha vencimiento
+label.title.reportes.tareasProximoVencimiento.codigoCaso=C\u00f3digo caso
+label.title.reportes.tareasProximoVencimiento.caso=Caso
+label.title.reportes.audiencia.proceso=Proceso
+label.title.reportes.audiencia.radicado=Radicado
+label.title.reportes.audiencia.demandado=Demandado
+label.title.reportes.audiencia.audiencia=Audiencia
+label.title.reportes.audiencia.fechaVencimiento=Fecha vencimiento
+label.title.reportes.audiencia.lugar=Lugar
+label.title.reportes.audiencia.responsables=Responsables
+label.title.reportes.audiencia.alertas=Alertas
+label.filter.reportes.ordernar=Ordenar audiencias por
+label.filter.reportes.auditorias.ordernar=Ordenar auditorias por
+label.filter.reportes.ordernar.caducidad=Ordenar caducidades por
+label.filter.reportes.ordernar.documentos.pendientes=Ordenar documentos por
+label.filter.reportes.ordernar.recursos.pendientes=Ordenar recursos por
+label.maestro.exportar.excel=Exportar
+label.title.reportes.caducidadCasos.fechaHechos=Fecha de los hechos
+label.title.reportes.caducidadCasos.caducidadPrejudicial=Caducidad prejudicial
+label.title.reportes.caducidadCasos.caducidadDemandada=Caducidad demanda
+label.title.reportes.recursosPendientes.despacho=Despacho
+label.title.reportes.recursosPendientes.recurso=Recursos
+label.title.reportes.documentosPendientes.nombreTitular=Nombre titular
+label.title.reportes.documentosPendientes.parentesco=Parentesco
+label.title.reportes.documentosPendientes.documento=Documento
+label.title.reportes.documentosPendientes.lugarDocumento=Lugar documento
+label.title.reportes.documentosPendientes.fechaVencimiento=Fecha de vencimiento
+label.title.reportes.seleccionar=Seleccionar
+label.title.reportes.pendiente=Pendiente
+label.title.reportes.completada=Completada
+label.title.reportes.vencida=Vencida
+label.title.reportes.alfabeticamenteAZ=Albabeticamente (A-Z)
+label.title.reportes.alfabeticamenteZA=Albabeticamente (Z-A)
+label.title.reportes.masReciente=más reciente
+label.title.reportes.masAntigua=más antigua
+
+label.error=Error!
+label.error.noAutorizacion.comuniquese=Si es un error por favor comuníquse con el administrador del sistema.
+label.error.noAutorizacion.recurso=No está autorizado para utilizar este recurso
+label.campo.nombreUsuario=Nombre de usuario
+label.campo.contrasena=Contraseña
+label.campo.ingresarAplicacion=Ingresar al Módulo Web GJA
+label.campo.restaurarPassword=Restaurar Contraseña
+label.campo.nuevaPassword=Nueva Contraseña
+label.campo.confirmarPassword=Confirmar Contraseña
+label.campo.confirmarEmail=Digite su Email
+
+
+#Listado Clientes
+label.title.clientes=Lista de Clientes
+label.menu.title.clientes=Clientes
+label.detalleClientes.ListaClientes=Lista de Clientes
+label.title.nombreClientes=Nombre de los Clientes
+
+#home
+label.title.home.casoTipoCaso=Procesos por tipo Caso
+label.title.home.actividadesPrincipales=Casos actividades principales
+label.title.home.casoEstadoCaso=Casos por estado
+label.title.home.actividadesPorEstado=Actividades por estado
+label.title.button.ver.mas=Ver m\u00E1s
+label.title.button.buscar=Buscar
+
+#Listado de archivos
+label.title.archivos=Visor de Documentos
+label.title.tabla.archivos=Tabla de Archivos
+label.title.importar.archivos=Importar Archivos
+
+#MAESTRO ESCALAMIENTO NOTIFICACION
+lable.title.dias.antes=# Días Antes a Notificar
+lable.title.dias.despues=# Días Despues a Notificar
+lable.title.estado.noficacion=Estado Notificación
+lable.title.notificar.a=Notificar A
+lable.title.numero.alerta.notificacion=# Alerta por Día

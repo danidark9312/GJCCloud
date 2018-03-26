@@ -1,0 +1,228 @@
+<c:if test="${cons.getParametroSiCorto() == permisos.listaRolAccionOpcion[0].snEscritura}">
+	<div id="modal-modificarDemandado" class="modal fade">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<h4 class="modal-title">
+						<label>
+							<spring:message code="label.modal.modificarMiembroDelCaso" />
+						</label>
+					</h4>
+				</div>
+				<div class="modal-body modal-scroll">
+					<div class="alert alert-danger" id="messageErrorModificarMiembro"
+						name="messageErrorModificarMiembro" style="display: none"></div>
+					<div name="formularioEquipoCaso" id="modificarDemandado">
+						<div class="row">
+							<div class="col-sm-6 b-r">
+								<label>
+									<spring:message code="label.campo.tipoDePersona" />
+								</label>
+								<span class="text-danger"> *</span>
+								<select class="form-control" id="txtTipoPersona" name="txtTipoPersona" tabindex="1"
+									onchange="">
+									<option value=""><spring:message code="label.campo.seleccionar" /></option>
+									<option value=2><spring:message code="label.campo.personaNatural" /></option>
+									<option value=1><spring:message code="label.campo.personaJuridica" /></option>
+								</select>
+							</div>
+							<div class="col-sm-6">
+								<label>
+									<spring:message code="label.campo.nombresMiembro" />
+								</label>
+								<span class="text-danger"> *</span>
+								<input type="text" class="form-control" id="txtNombresMiembro" name="txtNombresMiembro"
+									maxlength="60" tabindex="2">
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-sm-6 b-r">
+								<label>
+									<spring:message code="label.campo.identificacionDeMiembro" />
+								</label>
+								<input type="text" class="form-control" id="txtIdentificacionMiembro"
+									name="txtIdentificacionMiembro" maxlength="11" tabindex="3">
+							</div>
+							<div class="col-sm-6 b-r">
+								<label>
+									<spring:message code="label.maestroUsuario.Tipodocumento" />
+								</label>
+								<select class="form-control" id="demandadoTipoDocumento" name="demandadoTipoDocumento"
+									tabindex="4">										
+								</select>
+							</div>
+						</div>
+<!-- 						<div class="row"> -->
+<!-- 							<div class="col-sm-12 b-r"> -->
+<!-- 								<label> -->
+<!-- 									<spring:message code="label.maestroUsuario.FechaNacimiento" /> -->
+<!-- 								</label> -->
+<!-- 								<input id="demandadoNacimientoUsuario" name="demandadoNacimientoUsuario" class="form-control" type="date" tabindex="5"/>								 -->
+<!-- 							</div> -->
+<!-- 						</div> -->
+<!-- 						<br> -->
+						<div class="row">
+							<div class="col-sm-6 b-r">
+								<label>
+									<spring:message code="label.campo.paisDemandado" />
+								</label>
+								<select class="form-control" id="txtPaisMiembroDemandado" name="txtPaisMiembro" tabindex="6"
+									onchange="cargarDepartamentosPorPais1(this)">
+								</select>
+							</div>
+							<div class="col-sm-6 b-r">
+								<label>
+									<spring:message code="label.campo.departamentoDemandado" />
+								</label>
+								<select class="form-control" id="TxtDepartamentoMiembroDemandado"
+									name="TxtDepartamentoMiembro" tabindex="7" onchange="cargarCiudadPorDepartamentos1(this)">
+								</select>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-sm-6">
+								<label>
+									<spring:message code="label.campo.municipioDemandado" />
+								</label>
+								<select class="form-control" id="txtMunicipioMiembroDemandado" name="txtMunicipioMiembro"
+									tabindex="8">
+								</select>
+							</div>
+							<div class="col-sm-6">
+								<label>
+									<spring:message code="label.campo.direccionDeMiembro" />
+								</label>
+								<div class="input-group m-b">
+									<span class="input-group-addon"><i class="fa fa-map-marker"></i></span>
+									<input type="text" class="form-control" id="txtDireccionMiembro" name="txtDireccionMiembro"
+										maxlength="60" tabindex="9">
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-sm-6 b-r"></div>
+							<div class="col-sm-6" style="padding-left: 3%"></div>
+						</div>
+						<div class="row">
+							<div class="col-sm-6 b-r">
+								<div name="formularioTelefono">
+									<div class="col-sm-10" style="padding-left: 1%">
+										<label>
+											<spring:message code="label.campo.telefonoMiembro" />
+										</label>
+										<div class="input-group m-b">
+											<span class="input-group-addon"><i class="fa fa-phone-square"></i></span>
+											<input type="text" class="form-control" id="txtTelefonoMiembroDemandado"
+												name="txtTelefonoMiembroDemandado" maxlength="15" data-mask="(999) 999-9999"
+												placeholder="(___) ___-____" tabindex="10">
+											<input hidden="hidden" id="txtCodigoTelefono" name="txtCodigoTelefono" value="" />
+										</div>
+									</div>
+									<div class="col-sm-2">
+										<a href="javascript:void(0);" onclick="agregartelefono(this)" title="Adicionar Teléfono"
+											class="btn btn-success btn-circle .btn-xs" style="background-color: #449D44; border: 0;" tabindex="11">
+											<i class="glyphicon glyphicon-plus"></i>
+										</a>
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-6 b-r">
+								<div name="formularioCelular">
+									<div class="col-sm-10 ">
+										<label>
+											<spring:message code="label.campo.celularMiembro" />
+										</label>
+										<div class="input-group m-b">
+											<span class="input-group-addon"><i class="fa fa-mobile"></i></span>
+											<input type="text" class="form-control" id="txtCelularMiembroDemandado"
+												name="txtCelularMiembroDemandado" maxlength="20" data-mask="(999) 999-9999"
+												placeholder="(___) ___-____" tabindex="12">
+											<input hidden="hidden" id="txtCodigoCelular" name="txtCodigoCelular" value="" />
+										</div>
+									</div>
+									<div class="col-sm-2">
+										<a href="javascript:void(0);" onclick="agregarCelular(this)"
+											class="btn btn-success btn-circle .btn-xs" title="Adicionar Teléfono"
+											style="background-color: #449D44; border: 0;" tabindex="13">
+											<i class="glyphicon glyphicon-plus"></i>
+										</a>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-sm-12"></div>
+						</div>
+						<div class="row">
+							<div name="formularioCorreo">
+								<div class="col-sm-11">
+									<label>
+										<spring:message code="label.campo.correoMiembro" />
+									</label>
+									<div class="input-group m-b" style="width: 99%">
+										<span class="input-group-addon"><i class="fa fa-at"></i></span>
+										<input type="text" class="form-control" id="txtCorreoMiembroDemandado"
+											name="txtCorreoMiembroDemandado" maxlength="60" tabindex="14">
+										<input hidden="hidden" id="txtCodigoCorreo" name="txtCodigoCorreo" value="" />
+									</div>
+								</div>
+								<div class="col-sm-1" style="padding-left: 1%;">
+									<a href="javascript:void(0);" onclick="agregarCorreo(this)"
+										class="btn btn-success btn-circle .btn-xs" title="Adicionar Correo"
+										style="background-color: #449D44; border: 0;" tabindex="15">
+										<i class="glyphicon glyphicon-plus"></i>
+									</a>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-sm-12">
+								<label>
+									<spring:message code="label.campo.observacionesMiembro" />
+								</label>
+								<textarea id="txtObservacionesMiembro" name="txtObservacionesMiembro" class="form-control"
+									rows="3" maxlength="255" tabindex="16"></textarea>
+							</div>
+						</div>
+						<br>
+						<hr class="hr-line-solid">
+						<form action="${url}" id="fotoForm" name="fotoForm" enctype="multipart/form-data">
+							<div class="fileinput fileinput-new" data-provides="fileinput">
+								<div class="fileinput-preview thumbnail" data-trigger="fileinput"
+									style="width: 200px; height: 150px;" id="fotoDemandado">									
+								</div>
+								<div id="previewFotoTemporalDemandado" style="width: 200px; height: 150px;" hidden="hidden">
+									<img src="" width="" height="">
+								</div>
+								<div>
+									<span class="btn btn-default btn-file"><span class="fileinput-new"><spring:message
+												code="label.campo.seleccionarImagen" /></span><span class="fileinput-exists"><spring:message
+												code="label.campo.cambiarImagen" /></span> <input onclick="ocultarMostrar()" type="file" id="archivos" name="archivos">
+									</span>
+									<a href="#" class="btn btn-default fileinput-exists" data-dismiss="fileinput">
+										<spring:message code="label.campo.removerImagen" />
+									</a>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-azul" data-dismiss="modal" onclick="">
+						<label>
+							<spring:message code="label.boton.cancelar" />
+						</label>
+					</button>
+					<button id="btnModificar" type="button" class="btn btn-azul" onclick="guardarModificacionesMiembro()">
+						<label>
+							<spring:message code="label.boton.guardar" />
+						</label>
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</c:if>

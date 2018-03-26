@@ -1,0 +1,54 @@
+<!-- REVISAR EL CIERRE Y APERTURA DE LOS DIVS CON LOS C:IF -->
+<div id="tab-2" class="tab-pane">
+	<div class="alert alert-success alert-block hide" id="alertSucessMiembro">
+		<div id="divMensajeSuccessMiembro"></div>
+	</div>
+	<div class="row center-block text-right">
+		<a data-toggle="modal" href="#modal-adicionarMiembroEquipo" onclick="cargarFormulariosEquipoNuevo()"
+			title="Agregar Nuevo Miembro" class="btn btn-success  btn-circle btn-xs"><i class="glyphicon glyphicon-plus"></i>
+		</a>
+	</div>
+	<select hidden="hidden" id="abogadosResponsablesTareas" name="abogadosResponsablesTareas" >
+		<c:forEach var="registroEquipo" items="${caso.casoEquipoCasoSet}" begin="0" varStatus="status">
+			<c:if test="${registroEquipo.tipoMiembro.codigo == 5 && registroEquipo.activo == 'S'}">
+				<option value="${registroEquipo.equipoCaso.codigoEquipoCaso}" miembro="${registroEquipo.tipoMiembro.codigo}">${registroEquipo.equipoCaso.nombre}${registroEquipo.equipoCaso.apellido}</option>
+			</c:if>
+			<c:if test="${registroEquipo.tipoMiembro.codigo == 4 && registroEquipo.activo == 'S'}">
+				<option value="${registroEquipo.equipoCaso.codigoEquipoCaso}" miembro="${registroEquipo.tipoMiembro.codigo}">${registroEquipo.equipoCaso.nombre}${registroEquipo.equipoCaso.apellido}</option>
+			</c:if>
+		</c:forEach>
+	</select>
+	<select hidden="hidden" id="abogadosDelCaso" name="abogadosDelCaso">
+		<c:forEach var="registroEquipo" items="${caso.casoEquipoCasoSet}" begin="0" varStatus="status">
+			<c:if test="${registroEquipo.tipoMiembro.codigo == 5 && registroEquipo.activo == 'S'}">
+				<option value="${registroEquipo.equipoCaso.identificacion}">${registroEquipo.equipoCaso.nombre}${registroEquipo.equipoCaso.apellido}</option>
+			</c:if>
+		</c:forEach>
+	</select>
+	<select hidden="hidden" id="otrosResponsables" name="otrosResponsables">
+		<c:forEach var="otroResponsable" items="${caso.casoEquipoCasoSet}" begin="0" varStatus="status">
+			<c:if test="${otroResponsable.tipoMiembro.codigo == 4 && otroResponsable.activo == 'S'}">
+				<option value="${otroResponsable.equipoCaso.codigoEquipoCaso}">${otroResponsable.equipoCaso.nombre}${otroResponsable.equipoCaso.apellido}</option>
+			</c:if>
+		</c:forEach>
+	</select>
+	<div id="tarjetaVictima">
+		<%@ include file="/WEB-INF/jsp/casos/detalleCaso/tarjetaVictima.jsp"%>
+	</div>
+	<div id="tarjetaDemandante">
+		<%@ include file="/WEB-INF/jsp/casos/detalleCaso/tarjetaDemandante.jsp"%>
+	</div>
+	<div id="tarjetaTestigo">
+		<%@ include file="/WEB-INF/jsp/casos/detalleCaso/tarjetaTestigo.jsp"%>
+	</div>
+	<div id="tarjetaDemandado">
+		<%@ include file="/WEB-INF/jsp/casos/detalleCaso/tarjetaDemandado.jsp"%>
+	</div>
+	<div id="tarjetaAbogados">
+		<%@ include file="/WEB-INF/jsp/casos/detalleCaso/tarjetaAbogados.jsp"%>
+	</div>
+	<div id="tarjetaOtro">
+		<%@ include file="/WEB-INF/jsp/casos/detalleCaso/tarjetaOtro.jsp"%>
+	</div>	
+	<div id="controlEspacios"></div>
+</div>

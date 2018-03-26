@@ -1,0 +1,31 @@
+package com.gja.gestionCasos.casos.repository;
+
+import org.springframework.stereotype.Repository;
+
+import com.gja.gestionCasos.casos.entities.Radicado;
+import com.gja.gestionCasos.casos.entities.RadicadoPK;
+import com.sf.util.BusinessException;
+import com.sf.util.DAOException;
+import com.sf.util.repository.AbstractRepository;
+
+@Repository("radicadoRepository")
+public class RadicadoRepositoryImpl extends AbstractRepository<Radicado>  implements RadicadoRepository{
+
+	public Radicado obtenerRadicado(RadicadoPK radicadoPK) throws DAOException, BusinessException {
+		
+		Radicado radicado= entityManager.find (Radicado.class, radicadoPK);
+		return radicado;
+	}
+
+	public Radicado guardarRadicado(Radicado radicado) throws DAOException,
+			BusinessException {
+		radicado = this.merge(radicado);
+		return radicado;
+	} 
+
+	
+	public void eliminarRadicado(Radicado radicado) throws DAOException,
+			BusinessException {
+		entityManager.remove(radicado);
+	}
+}

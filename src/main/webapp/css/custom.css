@@ -1,0 +1,416 @@
+
+
+/*
+ *
+ *   INSPINIA - Custom
+ *
+*/
+
+a:focus{
+  outline: 0;
+}
+
+.bg-login{
+  background: none;
+  background-image: url('../img/bg-login.jpg') !important;
+  background-size: cover;
+  background-attachment: fixed;
+}
+
+.footer{
+  background-color: #314B7E;
+  border: none;
+  color: #FFF;
+}
+
+.footer .text-right{
+  padding-top: 5px;
+}
+
+.bg-negro-70{
+  background-color: rgba(0,0,0,0.7);
+}
+
+#login{
+  margin-top: 40px;
+}
+
+#login .logo-login{
+  margin-top: -30px
+}
+
+#login .bg-negro-70{
+  padding: 30px 0;
+  color: #FFF;
+}
+
+#login a{
+  color: #FFF;
+  font-weight: 700;
+}
+
+#login a:hover{
+  opacity: 0.8;
+  filter: alpha(opacity=80);
+}
+
+#login .wrapper-content{
+  padding: 0 40px;
+}
+
+#login .btn{
+  background-color: #314B7E;
+  border: none;
+}
+
+#login .btn:hover{
+  border: none;
+  background-color: #1C2B48;
+}
+
+#login .form-login{
+  background-image: url('../img/sep-login.png');
+  background-repeat: no-repeat;
+  background-position: left center;
+}
+
+.btn-azul{
+  background-color: #314B7E;
+  color: #FFF;
+  border: 1px solid rgb(23, 20, 14);
+}
+
+.btn-azul:hover{
+  background-color: #1C2B48;
+  color: #FFF;
+}
+
+hr{
+  border-color: rgba(255,255,255,0.3);
+}
+
+.form-horizontal .control-label{
+  text-align: left;
+}
+
+.top-navigation .navbar-brand{
+  padding: 0;
+}
+
+.menu-top{
+  position: absolute;
+  width: 100%;
+  top: 0;
+  left: 0;
+}
+
+.bg-menu nav{
+background-color: #314B7E;
+}
+
+#header-interno{
+  text-align: center;
+  background-color: #DDD;
+}
+
+#header-interno img{
+  max-width: 100%;
+}
+
+.top-navigation .nav > li > a{
+  color: #FFF;
+}
+
+.top-navigation .nav > li > a:hover,
+.top-navigation .nav > li.active,
+.top-navigation .nav > li.active > a{
+  color: #FFF;
+  background: none
+}
+
+.contenido{
+  padding: 30px 0;
+}
+
+.contenido h1.title{
+  color: #314B7E;
+  margin: 10px 0 30px 0;
+  font-weight: 700;
+}
+
+.navbar-toggle{
+  background-color: #314B7E;
+}
+
+.blue-bg{
+  background-color: #314B7E;
+}
+
+.footer{
+  position: relative;
+}
+
+.bg-login .footer{
+  position: absolute;
+}
+.margen-superior{
+	padding-top: 140px;
+    background-color: #ecedef;
+}
+
+#breadcrumbs-logout{
+  background-color: #FFF;
+  color: #999999;
+}
+
+#breadcrumbs-logout a{
+  color: #999999
+}
+
+#breadcrumbs-logout a:hover{
+  color: #333;
+}
+
+.nav > li > a{
+  font-weight: normal;
+}
+
+.breadcrumb{
+  padding-top: 17px;
+}
+
+#page-wrapper{
+  padding: 0;
+}
+
+.form-control:focus, .single-line:focus{
+  border-color: #314B7E;
+}
+
+.panel-body .fa-plus-square{
+  color: #05ac11;
+  font-size: 30px;
+  margin-top: 25px;
+}
+
+.panel-body .fa-minus-square{
+  color: #FF0000;
+  font-size: 30px;
+  margin-top: 25px;
+}
+
+.panel-body .fa:hover{
+  opacity: 0.7;
+  filter: alpha(opacity=70);
+}
+
+.panel-title a{
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.integrante{
+  margin-top: 10px;
+  margin-bottom: 10px
+}
+
+
+.integrante .inner{
+  border: 1px solid #DDD;
+  padding: 20px;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+
+}
+
+.integrante .dato{
+  font-size: 11px;
+  margin-bottom: 2px;
+
+}
+
+.integrante .empresa{
+  color: #314B7E;
+  font-weight: 700;
+}
+
+.panel-options .nav > li > a{
+  color: #999999;
+  background-color: #F3F3F3;
+}
+
+.panel-options .nav > li.active > a{
+  color: #314B7E;
+  font-weight: 700;
+  border-bottom: 1px solid #FFF;
+}
+
+.color-verde{
+  color: #85B200;
+
+}
+
+.color-rojo{
+  color: #B20000;
+}
+
+.color-azul{
+  color: #314B7E;
+}
+
+td .fa{
+  margin-right: 5px;
+}
+
+
+.ibox-title h5{
+  color: #314B7E;
+}
+
+.nav-tabs a:hover{
+   color: #314B7E !important;
+}
+
+.btns-forms .btn{
+  margin-top: 23px;
+}
+
+.titulo-azul{
+  color: #314B7E;
+}
+
+div.form-inline .btn{
+  margin-top: 4px;
+  margin-right: 1px;
+}
+
+.tab-content.detalles-caso .dato{
+  background-color: #F9F9F9;
+}
+
+.tab-content.detalles-caso .dato p,
+.tab-content.detalles-caso .titulo-dato p{
+  padding: 10px 8px;
+  margin-bottom: 0;
+}
+
+.tab-content.detalles-caso .titulo-dato p{
+  border-bottom: 1px solid #E7EAEC
+}
+
+.tab-content.detalles-caso h3{
+  margin-top: 30px;
+}
+
+
+.pv-5{
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
+
+.pv-50{
+  padding-top: 50px;
+  padding-bottom: 50px;
+}
+
+.logo-mobile{
+  display: none !important;
+  margin: 5px 30px;
+}
+
+.top-navigation .navbar-brand{
+  background: none;
+}
+
+.top-navigation .nav > li a:hover, 
+.top-navigation .nav > li a:focus{
+  background: none;
+  color: #FFF;
+}
+
+.top-navigation .navbar-nav .open .dropdown-menu > li > a:hover{
+  color: #314b7e;
+}
+
+.ibox-title .btn{
+  margin: -8px 0 0 0;
+}
+
+
+
+
+/* media queries */
+
+@media (max-width: 990px) {
+  .fecha-nacimiento .col-md-4{
+    padding-top: 8px;
+    padding-bottom: 8px;
+  }
+
+}
+
+@media (max-width: 767px) {
+  #login{
+    margin: 20px 0;
+  }
+  .bg-login .footer{
+    position: relative;
+    text-align: center;
+  }
+  .footer .text-right{
+    text-align: center;
+    padding: 10px;
+  }
+  #login .form-login{
+    background: none;
+  }
+  .intro-login{
+    text-align: center;
+    padding: 0 0 20px 0;
+  }
+
+  .logo-mobile{
+    display: inherit !important;
+  }
+
+  .logo-desktop{
+    display: none !important;
+  }
+
+  .texto-intro-login{
+    text-align: center;
+  }
+
+  .dropdown-menu > li > a{
+    color: #FFF !important;
+  }
+}
+
+@media (max-width: 480px) {
+
+  #login .wrapper-content{
+    padding: 20px;
+  }
+
+  .pull-right{
+    clear: both;
+    margin-top: 20px;
+  }
+
+
+}
+
+.bg-menu nav {
+    background-color: #314B7E;
+}
+
+
+@media (min-width: 768px){
+	.navbar-fixed-top .navbar-collapse, .navbar-static-top .navbar-collapse, .navbar-fixed-bottom .navbar-collapse {
+    left: 8% !important;
+    position: relative;
+}
+}

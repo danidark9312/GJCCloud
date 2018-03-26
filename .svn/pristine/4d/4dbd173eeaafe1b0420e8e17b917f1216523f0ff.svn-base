@@ -1,0 +1,43 @@
+<c:if test="${cons.getParametroSiCorto() == permisos.listaRolAccionOpcion[0].snCrear}">
+	<div id="modal-nuevoCaso" name="modal-nuevoCaso" class="modal fade" aria-hidden="true">
+		<div class="modal-dialog modal-lg" id="modal">
+			<div class="modal-content" id="" >
+				<div class="modal-header">
+					<div class="row">
+						<div class="col-sm-8 b-r">
+							<h2 class="modal-title">
+								<spring:message code="label.campo.nuevoCaso" />
+							</h2>
+						</div>
+						<div class="col-sm-4">
+							<label>
+								<spring:message code="label.campo.estadoCaso" />
+							</label>
+							<span class="text-danger"> *</span>
+							<Select class="form-control" id="txtEstadoCaso" name="txtEstadoCaso"></Select>
+						</div>
+					</div>
+				</div>
+				<div class="modal-body modal-scroll" style="background-color: white" id="modalPrueba">
+					<div class="row">
+						<div class="alert alert-danger" id="messageError"></div>
+					</div>
+					<div class="row">
+						<div class="alert alert-danger" id="messageErrorNuevoCaso"></div>
+					</div>
+					<div class="row">
+						<div class="alert alert-danger" id="messageErrorFechaFinDelosHechos" style="display: none"></div>
+					</div>
+					<!-- Inicio bloque Nuevo Caso-->
+					<input hidden="hidden" id="aniosCaducidadParam" name="aniosCaducidadParam"
+						value="${aniosCaducidad}" />
+					<%@include file="/WEB-INF/jsp/casos/nuevoCaso/detalleDelCaso.jsp"%>
+				</div>
+			</div>
+		</div>
+	</div>
+	<c:if test="${cons.getParametroSiCorto() == permisos.listaRolAccionOpcion[0].snEliminar}">
+		<%@include file="/WEB-INF/jsp/casos/nuevoCaso/modalEliminarActividad.jsp"%>
+		<%@include file="/WEB-INF/jsp/casos/nuevoCaso/modalEliminarTarea.jsp"%>
+	</c:if>
+</c:if>

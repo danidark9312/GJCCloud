@@ -1,0 +1,34 @@
+package com.gja.gestionCasos.casos.repository;
+
+import java.util.List;
+
+import org.hibernate.Hibernate;
+import org.springframework.stereotype.Repository;
+
+import com.gja.gestionCasos.casos.entities.BienAfectado;
+import com.gja.gestionCasos.casos.entities.Prestamo;
+import com.sf.util.BusinessException;
+import com.sf.util.DAOException;
+import com.sf.util.repository.AbstractRepository;
+
+@Repository("prestamoRepository")
+public class PrestamoRepositoryImpl extends AbstractRepository<Prestamo> implements PrestamoRepository{
+
+	public Prestamo guardarPrestamo(Prestamo prestamo) throws DAOException,
+			BusinessException {
+		
+		prestamo=this.merge(prestamo);
+		return prestamo;
+	}
+
+	
+	
+	
+	public Prestamo obtenerPrestamo(Prestamo prestamo)
+			throws DAOException, BusinessException {
+		prestamo = entityManager.find(Prestamo.class, prestamo.getCodigoPrestamo());
+		Hibernate.initialize(prestamo.getEntidadFinaciera());
+		Hibernate.initialize(prestamo.getCaso());
+		return prestamo;
+	}	
+}

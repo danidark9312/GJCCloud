@@ -1,0 +1,14 @@
+package com.gja.gestionCasos.casos.repository;
+
+
+
+import com.gja.gestionCasos.casos.entities.BienAfectado;
+import com.gja.gestionCasos.casos.entities.Prestamo;
+import com.sf.util.BusinessException;
+import com.sf.util.DAOException;
+
+public interface PrestamoRepository {
+
+	public Prestamo guardarPrestamo(Prestamo prestamo) throws DAOException,BusinessException;
+	Prestamo obtenerPrestamo(Prestamo prestamo) throws DAOException, BusinessException;
+}

@@ -1,0 +1,151 @@
+package com.gja.gestionCasos.casos.repository;
+
+import java.util.List;
+
+import javax.persistence.Query;
+
+import org.apache.log4j.Logger;
+import org.springframework.stereotype.Repository;
+
+import com.bea.xbean.xb.xsdschema.Attribute.Use;
+import com.gja.gestionCasos.casos.entities.Celular;
+import com.gja.gestionCasos.casos.entities.Correo;
+import com.gja.gestionCasos.casos.entities.EquipoCaso;
+import com.gja.gestionCasos.casos.entities.Telefono;
+import com.sf.social.signinmvc.user.model.User;
+import com.sf.util.BusinessException;
+import com.sf.util.DAOException;
+import com.sf.util.Parametros;
+import com.sf.util.repository.AbstractRepository;
+
+@Repository("equipoCasoRepository")
+public class EquipoCasoRepositoryImpl extends AbstractRepository<EquipoCaso> implements EquipoCasoRepository {
+
+	private static final Logger LOG = Logger
+			.getLogger(EquipoCasoRepositoryImpl.class);
+	
+	
+	public EquipoCaso guardarEquipoCaso(EquipoCaso equipoCaso)throws DAOException, BusinessException {
+		equipoCaso = this.merge(equipoCaso);
+		return equipoCaso;
+	}
+
+	public List<User> obtenerAbogado() throws DAOException,BusinessException{
+		List<User> abogados = null;
+		//Ejemplo de un JOIN con where
+		abogados = entityManager.createQuery("SELECT u FROM User u, RolesUsuarios r WHERE u.id = r.rolesUsuariosPK.codigoUsuario "
+											+ "  AND r.rolesUsuariosPK.codigoRol IN (:pCodigoAbogado, :pCodigoSocio, :pCodigoDependiente, :pAsociado)  ORDER BY u.nombre")
+						.setParameter("pCodigoAbogado", Integer.parseInt(Parametros.getRolAbogado()))
+						.setParameter("pCodigoSocio", Integer.parseInt(Parametros.getRolSocio()))
+						.setParameter("pCodigoDependiente", Integer.parseInt(Parametros.getRolDependiente()))
+						.setParameter("pAsociado", Integer.parseInt(Parametros.getRolAsociado()))
+						.getResultList();
+		return abogados;
+		
+	}
+	
+/*	public List<User> obtenerAbogado() throws DAOException,BusinessException{
+		List<User> abogados = null;
+		//Ejemplo de un JOIN con where
+		abogados = entityManager.createQuery("SELECT u FROM User u, RolesUsuarios r WHERE u.id = r.rolesUsuariosPK.codigoUsuario "
+											+ "  AND r.rolesUsuariosPK.codigoRol IN (:pCodigoAbogado, :pCodigoSocio, :pCodigoDependiente, :pAdministrador, :pAsociado)  ORDER BY u.nombre")										
+						.setParameter("pCodigoAbogado", Integer.parseInt(Parametros.getRolAbogado()))
+						.setParameter("pCodigoSocio", Integer.parseInt(Parametros.getRolSocio()))
+						.setParameter("pCodigoDependiente", Integer.parseInt(Parametros.getRolDependiente()))
+						.setParameter("pAdministrador", Integer.parseInt(Parametros.getRolAdmind()))
+						.setParameter("pAsociado", Integer.parseInt(Parametros.getRolAsociado()))
+						.getResultList();
+		return abogados;
+		
+	}*/ 
+
+	public List<User> obtenerAbogadosSeleccionados(String codigoAbogadoSeleccionado) throws DAOException,BusinessException{
+		List<User> abogados = null;
+		abogados = entityManager.createQuery("SELECT u FROM User u WHERE u.id=:uCodigoAbogado ORDER BY u.nombre").
+				setParameter("uCodigoAbogado", codigoAbogadoSeleccionado).getResultList();
+		return abogados;
+		
+	} 
+	
+	public EquipoCaso findByPK(EquipoCaso equipoCaso) throws DAOException {
+		EquipoCaso equipoCasoReturn;
+		try {
+			equipoCasoReturn = entityManager.find(EquipoCaso.class, equipoCaso.getCodigoEquipoCaso());
+			} catch (IllegalStateException e) {
+			throw new DAOException(e.getMessage(), e);
+		} catch (Exception e) {
+			throw new DAOException(e.getMessage(), e);
+		}
+		return equipoCasoReturn;
+	}
+	
+	
+	public void borrarEquipoCaso(EquipoCaso equipoCaso) throws DAOException,BusinessException{
+		
+		equipoCaso = findByPK(equipoCaso);
+		if (equipoCaso.getCelularList() != null) {			
+			for (Celular celular:equipoCaso.getCelularList()) {
+				entityManager.remove(celular);
+			}
+		}
+		if (equipoCaso.getTelefonoList() != null) {			
+			for (Telefono telefono:equipoCaso.getTelefonoList()) {			
+				entityManager.remove(telefono);
+			}
+		}
+		if (equipoCaso.getCorreoList() != null) {
+			for (Correo correo:equipoCaso.getCorreoList()) {				
+				entityManager.remove(correo);
+			} 
+		}
+		equipoCaso.setCelularList(null);
+		equipoCaso.setTelefonoList(null);
+		equipoCaso.setCorreoList(null);
+		entityManager.merge(equipoCaso);
+		
+	}
+	
+	
+	public List<User> obtenerAbogadosFueraDelCaso(String idUsuario) throws DAOException,
+			BusinessException {
+		List<User> abogados = null;
+		abogados = entityManager.createQuery("SELECT u FROM User u, RolesUsuarios r WHERE u.id = r.rolesUsuariosPK.codigoUsuario AND u.id != :pIdUsuario AND r.rolesUsuariosPK.codigoRol IN (:pCodigoAbogado, :pCodigoSocio, :pCodigoDependiente, :pAdministrador, :pAsociado)  ORDER BY u.nombre")
+				.setParameter("pIdUsuario", idUsuario)
+				.setParameter("pCodigoAbogado", Integer.parseInt(Parametros.getRolAbogado()))
+				.setParameter("pCodigoSocio", Integer.parseInt(Parametros.getRolSocio()))
+				.setParameter("pCodigoDependiente", Integer.parseInt(Parametros.getRolDependiente()))
+				.setParameter("pAdministrador", Integer.parseInt(Parametros.getRolAdmind()))
+				.setParameter("pAsociado", Integer.parseInt(Parametros.getRolAsociado()))
+				.getResultList();
+		return abogados;
+	}
+	public List<User> obtenerAbogadosIniciales(String codigoAbogadoSeleccionado) throws DAOException, BusinessException {
+		List<User> abogados = null;
+		abogados = entityManager.createQuery("SELECT u FROM User u WHERE u.abreviacionAbogado=:uCodigoAbogado ORDER BY u.nombre").
+				setParameter("uCodigoAbogado",codigoAbogadoSeleccionado).getResultList();
+		if (abogados == null || abogados.isEmpty())
+			throw new BusinessException("Error no se encontro el abogado o usuario con iniciales: " + codigoAbogadoSeleccionado);
+		return abogados;
+		
+	} 
+	
+	public EquipoCaso findEquipoCasoByIdentificacion(String identificacion)
+			throws DAOException, BusinessException {
+		EquipoCaso equipoCaso = null;
+	try {
+		equipoCaso = entityManager.createQuery("SELECT a FROM EquipoCaso a WHERE a.usuario.id = :pIdentificacion", EquipoCaso.class)
+				.setParameter("pIdentificacion", identificacion).setMaxResults(1).getSingleResult();
+	} catch (Exception e) {
+		equipoCaso = null;
+	}	
+		return equipoCaso;
+	}
+	
+	
+	public User findUserByPK(String idUser) throws DAOException,	
+			BusinessException {
+		User user = entityManager.find(User.class, idUser);
+		return user;
+	}
+	
+}

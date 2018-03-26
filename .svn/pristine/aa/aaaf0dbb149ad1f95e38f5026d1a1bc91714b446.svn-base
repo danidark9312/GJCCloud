@@ -1,0 +1,43 @@
+package com.gja.gestionCasos.casos.service;
+
+import java.util.List;
+
+import org.hibernate.Hibernate;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.gja.gestionCasos.casos.entities.BienAfectado;
+import com.gja.gestionCasos.casos.entities.BienAfectadoPK;
+import com.gja.gestionCasos.casos.entities.Caso;
+import com.gja.gestionCasos.casos.entities.Prestamo;
+import com.gja.gestionCasos.casos.repository.BienAfectadoRepositoryImpl;
+import com.gja.gestionCasos.casos.repository.PrestamoRepositoryImpl;
+import com.sf.util.BusinessException;
+import com.sf.util.DAOException;
+import com.sf.util.Parametros;
+
+@Service("prestamoService")
+@Transactional(readOnly = true)
+public class PrestamoServiceImpl implements PrestamoService {
+	
+	@Autowired
+	PrestamoRepositoryImpl PrestamoRepository;
+	
+	
+	public Prestamo obtenerPrestamo(Prestamo prestamo)
+			throws DAOException, BusinessException {
+		prestamo = PrestamoRepository.obtenerPrestamo(prestamo);
+		Hibernate.initialize(prestamo.getTipoCuenta());
+		return prestamo;
+	}
+
+	@Transactional
+	public Prestamo actualizarPrestamo(Prestamo prestamo) throws DAOException, BusinessException{
+		return  PrestamoRepository.guardarPrestamo(prestamo);
+		
+	}
+
+
+	
+}
