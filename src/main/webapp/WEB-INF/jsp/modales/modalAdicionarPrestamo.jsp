@@ -72,13 +72,14 @@
 						<div class="row">
 							<div class="col-sm-4 b-r">
 								<input type="date" class="form-control" id="txtFechaPrestamoModalAdicionar"
-									name="txtFechaPrestamoModalAdicionar">
+									name="txtFechaPrestamoModalAdicionar" onblur = "calcularInteresPrestamoSinAbono()">
 							</div>
 							<div class="col-sm-4 b-r">
 								<div class="input-group m-b">
 									<span class="input-group-addon">$</span>
 									<input type="text" maxlength="12" class="form-control" id="txtValorPrestamoModalAdicionar"
-										name="txtValorPrestamoModalAdicionar">
+										name="txtValorPrestamoModalAdicionar"
+										onblur = "calcularInteresPrestamoSinAbono()" >
 									<span class="input-group-addon">.00</span>
 								</div>
 							</div>
@@ -87,7 +88,7 @@
 									<span class="input-group-addon">%</span>
 									<input type="text" class="form-control" maxlength="6"
 										id="txtPorcentajeInteresPrestamoModalAdicionar"
-										name="txtPorcentajeInteresPrestamoModalAdicionar">
+										name="txtPorcentajeInteresPrestamoModalAdicionar" onblur = "calcularInteresPrestamoSinAbono()">
 								</div>
 							</div>
 						</div>
@@ -128,12 +129,26 @@
 						<div class="row">
 							<div class="col-sm-4 b-r">
 								<label>
-									<spring:message code="label.campo.intereses" />
+									<spring:message code="label.campo.interesesGenerados" />
 								</label>
 							</div>
+							
+						</div>
+						
+						<div class="row">
+							<div class="col-sm-4 b-r">
+								<div class="input-group m-b">
+									<span class="input-group-addon">$</span>
+									<input type="text" class="form-control" id="txtInteresesModalAdicionar" disabled>
+									<span class="input-group-addon">.00</span>
+								</div>
+							</div>
+							
+						</div>
+						<div class="row">
 							<div class="col-sm-4 b-r">
 								<label>
-									<spring:message code="label.campo.saldoPrestamo" />
+									<spring:message code="label.campo.saldoCapital" />
 								</label>
 							</div>
 							<div class="col-sm-4">
@@ -146,22 +161,53 @@
 							<div class="col-sm-4 b-r">
 								<div class="input-group m-b">
 									<span class="input-group-addon">$</span>
-									<input type="text" maxlength="12" class="form-control" id="txtInteresesModalAdicionar"
-										name="txtInteresesModalAdicionar">
-									<span class="input-group-addon">.00</span>
-								</div>
-							</div>
-							<div class="col-sm-4 b-r">
-								<div class="input-group m-b">
-									<span class="input-group-addon">$</span>
 									<input type="text" maxlength="12" class="form-control" id="txtSaldoPrestamoModalAdicionar"
-										name="txtSaldoPrestamoModalAdicionar">
+										disabled>
 									<span class="input-group-addon">.00</span>
 								</div>
 							</div>
 							<div class="col-sm-4">
 								<input type="text" class="form-control" id="txtTituloValorModalAdicionar"
 									name="txtTituloValorModalAdicionar" maxlength="30">
+							</div>
+						</div>
+						
+						<div class="row">
+							<div class="col-sm-4 b-r">
+								<label>
+									<spring:message code="label.campo.saldoTotal" />
+								</label>
+							</div>
+							<div class="col-sm-4 b-r">
+								<label>
+									<spring:message code="label.campo.totalPagado" />
+								</label>
+							</div>
+							<div class="col-sm-4">
+								<label>
+									<spring:message code="label.campo.fechaCancelacionPrestamo" />
+								</label>
+							</div>
+						</div>
+						
+						<div class="row">
+							<div class="col-sm-4 b-r">
+								<div class="input-group m-b">
+									<span class="input-group-addon">$</span>
+									<input type="text" class="form-control" id="txtSaldoTotalAdicionar" disabled>
+									<span class="input-group-addon">.00</span>
+								</div>
+							</div>
+							<div class="col-sm-4 b-r">
+								<div class="input-group m-b">
+									<span class="input-group-addon">$</span>
+									<input type="text" maxlength="12" class="form-control" id="txtTotalPagadoAdicionar" disabled value="0">
+									<span class="input-group-addon">.00</span>
+								</div>
+							</div>
+							<div class="col-sm-4 b-r">
+								<input type="date" class="form-control" id="txtFechaCancelacionPrestamoAdicionar" disabled
+									name="txtFechaCancelacionPrestamo">
 							</div>
 						</div>
 						<div class="row"></div>

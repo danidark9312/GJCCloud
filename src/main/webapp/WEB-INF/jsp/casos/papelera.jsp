@@ -303,7 +303,7 @@
 			</script>
 			<script>
 				$(document).ready(function() {
-					$(document).ajaxStart($.blockUI).ajaxStop($.unblockUI);
+					// $(document).ajaxStart($.blockUI).ajaxStop($.unblockUI);
 					cargarAbogado("responsablesFiltro");
 					mostrarTablaPapelera();
 					ocultarMensajesError();

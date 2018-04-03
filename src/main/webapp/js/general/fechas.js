@@ -16,6 +16,7 @@ function mostrarFechaCaducidad(){
 		var tpmDateCaducidad = new Date(ano,fecha[1]-1,fecha[2]);
 		var dateCaducidad = new Date(tpmDateCaducidad.getTime()+(diasPosponerCaducidad*24*60*60*1000)); //Posponemos la fecha de caducidad segun el parametros
 		console.log(new Date(ano,fecha[1]-1,fecha[2]));
+		
 		for(var i=0;i<disabledDates.length;i++){
 			if(disabledDates[i] == dateCaducidad.getTime()){
 				dateCaducidad.setDate(dateCaducidad.getDate()+1);

@@ -240,7 +240,7 @@ public class FileUploadController {
 				int k = 0;
 				String resumenInfo = "";
 				XSSFSheet sheet = wb.getSheetAt(0); // HOJA CONTROL PROCESOS GJA
-				XSSFSheet sheet2 = wb.getSheetAt(1);// HOJA INFORMACIÓN ADICIONAL
+				XSSFSheet sheet2 = wb.getSheetAt(1);// HOJA INFORMACIï¿½N ADICIONAL
 				
 				@SuppressWarnings("rawtypes")
 				Iterator iterator = sheet.rowIterator();
@@ -1221,7 +1221,7 @@ public class FileUploadController {
 		celdasTareas.put("fotocopiaCC", rowDemandados.getCell(20));
 		celdasTareas.put("contratoMandato", rowDemandados.getCell(22));
 		celdasTareas.put("informativo_juntaMed", rowDemandados.getCell(24));
-		celdasTareas.put("copiaProcesoTránsito", rowDemandados.getCell(26));
+		celdasTareas.put("copiaProcesoTrï¿½nsito", rowDemandados.getCell(26));
 		celdasTareas.put("preclusionSentencia", rowDemandados.getCell(28));
 		celdasTareas.put("boletaLibertad", rowDemandados.getCell(30));
 		celdasTareas.put("historiaClinica", rowDemandados.getCell(32));
@@ -1234,7 +1234,7 @@ public class FileUploadController {
 		celdasTareas.put("otros", rowDemandados.getCell(46));
 		if (rowDemandados != null) {
 			
-			if (etiquetaSw.getStringCellValue().equalsIgnoreCase("Esposo(a) Compañero(a)")) {
+			if (etiquetaSw.getStringCellValue().equalsIgnoreCase("Esposo(a) Compa(a)")) {
 				celdasResponsables.put("responsablePoder", rowDemandados.getCell(17));
 				celdasResponsables.put("responsablePoderProcuraduria", rowDemandados.getCell(19));
 				celdasResponsables.put("responsableFotoCopia", rowDemandados.getCell(21));
@@ -1255,7 +1255,7 @@ public class FileUploadController {
 				//validarResponsablesTareas(celdasResponsables);
 			}
 		}
-		if (!etiquetaSw.getStringCellValue().equalsIgnoreCase("Esposo(a) Compañero(a)")
+		if (!etiquetaSw.getStringCellValue().equalsIgnoreCase("Esposo(a) Compa(a)")
 				&& !etiquetaInfoTestigo.equalsIgnoreCase("DEMANDANTES/GRUPO FAMILIAR")
 				&& !etiquetaInfoTestigo.equalsIgnoreCase("")
 				&& !etiquetaInfoTestigo.equalsIgnoreCase("NOMBRES COMPLETOS *")) {
@@ -1585,7 +1585,7 @@ public class FileUploadController {
 				}
 				
 				if (parametrosDocumentos.getDocumentoProcesoTransito().equals(documento)) {
-					mapDocumentos.put("procesoTransito", celdasTareas.get("copiaProcesoTránsito"));
+					mapDocumentos.put("procesoTransito", celdasTareas.get("copiaProcesoTrï¿½nsito"));
 					mapDocumentos.put("responsableCPTransito", celdasResponsables.get("responsableCPTransito"));
 					mapDocumentos.put("fechaVencimientoCPTransito", celdasVencimientos.get("fechaVencimientoCPTransito"));
 					nombresTareas.add(Parametros.getActividadTransito());
@@ -1848,7 +1848,7 @@ public class FileUploadController {
 		Parentesco parentesco = new Parentesco();
 		XSSFCell isContacto = rowDemandados.getCell(2);
 		/** Parentesco */
-		XSSFCell esposoCompañero = rowDemandados.getCell(10);
+		XSSFCell esposoCompa = rowDemandados.getCell(10);
 		XSSFCell hijo = rowDemandados.getCell(11);
 		XSSFCell madrePadre = rowDemandados.getCell(12);
 		XSSFCell hermano = rowDemandados.getCell(13);
@@ -1867,7 +1867,7 @@ public class FileUploadController {
 			}
 		}
 		
-		if (esposoCompañero.getStringCellValue().equalsIgnoreCase(caracterMarca)) {
+		if (esposoCompa.getStringCellValue().equalsIgnoreCase(caracterMarca)) {
 			parentesco.setCodigo(Integer.parseInt(parametrosDocumentos.getParentescoEsposo()));
 			casoEquipoCaso.setParentesco(parentesco);
 		} else if (hijo.getStringCellValue().equalsIgnoreCase(caracterMarca)) {
@@ -1946,7 +1946,7 @@ public class FileUploadController {
 		XSSFCell celularTestigo = rowTestigos.getCell(7);
 		XSSFCell hotmailTestigo = rowTestigos.getCell(8);
 		XSSFCell direccionTestigo = rowTestigos.getCell(9);
-		XSSFCell esposoCompañero = rowTestigos.getCell(10);
+		XSSFCell esposoCompa = rowTestigos.getCell(10);
 		XSSFCell hijo = rowTestigos.getCell(11);
 		XSSFCell madrePadre = rowTestigos.getCell(12);
 		XSSFCell hermano = rowTestigos.getCell(13);
@@ -2069,7 +2069,7 @@ public class FileUploadController {
 			}
 		}
 		
-		if (esposoCompañero.getStringCellValue().equalsIgnoreCase(caracterMarca) && esposoCompañero != null) {
+		if (esposoCompa.getStringCellValue().equalsIgnoreCase(caracterMarca) && esposoCompa != null) {
 			try {
 				parentesco.setNombre(Parametros.getParentescoEsposo());
 				listaParentesco = parentescoService.obtenerCodigoParentesco(parentesco);
@@ -2205,7 +2205,7 @@ public class FileUploadController {
 		XSSFCell celularVictima = rowVictimas.getCell(7);
 		XSSFCell hotmailVictima = rowVictimas.getCell(8);
 		XSSFCell direccionVictima = rowVictimas.getCell(9);
-		XSSFCell esposoCompañero = rowVictimas.getCell(10);
+		XSSFCell esposoCompa = rowVictimas.getCell(10);
 		XSSFCell hijo = rowVictimas.getCell(11);
 		XSSFCell madrePadre = rowVictimas.getCell(12);
 		XSSFCell hermano = rowVictimas.getCell(13);
@@ -2302,7 +2302,7 @@ public class FileUploadController {
 //		if (!listaCorreo.isEmpty())
 //			equipoCaso.setCorreoList(listaCorreo);
 
-		if (esposoCompañero.getStringCellValue().equalsIgnoreCase(caracterMarca) && esposoCompañero != null) {
+		if (esposoCompa.getStringCellValue().equalsIgnoreCase(caracterMarca) && esposoCompa != null) {
 			try {
 				parentesco.setNombre(Parametros.getParentescoEsposo());
 				listaParentesco = parentescoService.obtenerCodigoParentesco(parentesco);
@@ -2654,7 +2654,7 @@ public class FileUploadController {
 		casoEquipoCaso.setEquipoCaso(equipoCaso);
 		casoEquipoCaso.setActivo(Parametros.getContactoActivo());
 		if (tipoPersona.getStringCellValue() != null && tipoPersona != null) {
-			if (tipoPersona.getStringCellValue().equalsIgnoreCase("Persona Jurídica")) {
+			if (tipoPersona.getStringCellValue().equalsIgnoreCase("Persona Jurï¿½dica")) {
 				casoEquipoCaso.setPersonajuridica(Parametros.getIsPersonaJuridica());
 			} else if (tipoPersona.getStringCellValue().equalsIgnoreCase("Persona Natural")) {
 				casoEquipoCaso.setPersonajuridica(Parametros.getNotPersonaJuridica());

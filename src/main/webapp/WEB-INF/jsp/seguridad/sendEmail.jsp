@@ -106,7 +106,7 @@
 							} catch(e) {
 								console.log(e);
 							}
-							$(document).ajaxStart($.blockUI).ajaxStop($.unblockUI);
+							// $(document).ajaxStart($.blockUI).ajaxStop($.unblockUI);
 						});
 	</script>
 	 

@@ -10,13 +10,14 @@ $(document).ready(
 				console.log(e);
 			}
 			
-			enableSortPendientesActividades();
+			enableSortPendientesActividades()
+			findAllDisabledDates();
 			getActividadesInfo();
 			var cdusuarioLogeado = $("#idusercreacion").val();
 			
 			var token = $("#_csrf").val();
 
-			$(document).ajaxStart($.blockUI).ajaxStop($.unblockUI);
+			// $(document).ajaxStart($.blockUI).ajaxStop($.unblockUI);
 			
 			ocultarMensajesError();
 			

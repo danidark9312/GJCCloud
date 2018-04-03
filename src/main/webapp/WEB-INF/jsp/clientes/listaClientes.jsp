@@ -249,7 +249,7 @@
 							}
 							var codigo;
 							$('#filtroEstadoProcesal').prop('disabled', true);
-							$(document).ajaxStart($.blockUI).ajaxStop($.unblockUI);
+							// $(document).ajaxStart($.blockUI).ajaxStop($.unblockUI);
 							$("#messageExitoso").hide();
 							ocultarMensajesError();
 							cargarCombox();							

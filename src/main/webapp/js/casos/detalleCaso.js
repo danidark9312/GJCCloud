@@ -51,8 +51,9 @@ function consultarCaso (codigo) {
 						var fechaHechoFormatoAnio = formatoFechaAnio(fechaHecho);
 						if(res.fechaSolicitudPrejudicial){
 							var fechaSolicitudPrejudicialFormat =  formatoFecha(new Date(res.fechaSolicitudPrejudicial));
+							var fechaSolicitudPrejudicialFormatAnio= formatoFechaAnio(new Date(res.fechaSolicitudPrejudicial));
 							$("#fechaPrejudicial").text(fechaSolicitudPrejudicialFormat);
-							$("#txtFechaPrejudicial").val(fechaSolicitudPrejudicialFormat);
+							$("#txtFechaPrejudicialMod").val(fechaSolicitudPrejudicialFormatAnio);
 						}
 						var fechaHechoFormatoAnio = formatoFechaAnio(fechaHecho);
 						$("#fechaHechos").text(fechaHechoFormato);

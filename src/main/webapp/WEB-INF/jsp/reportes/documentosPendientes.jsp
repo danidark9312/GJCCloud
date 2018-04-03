@@ -249,7 +249,7 @@
 			</script>
 			<script>
 				$(document).ready(function(){
-					$(document).ajaxStart($.blockUI).ajaxStop($.unblockUI);
+					// $(document).ajaxStart($.blockUI).ajaxStop($.unblockUI);
 					//cargarCombox();
 					cargarAbogado("responsablesFiltro");
 					if ($("#codigoResponsable").val()) {

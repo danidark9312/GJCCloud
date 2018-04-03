@@ -163,7 +163,7 @@
 		var fechaVencimiento = "<spring:message code='label.title.reportes.audiencia.fechaVencimiento' />";
 		var context = "${pageContext.request.contextPath}";
 		$(document).ready(function(){
-			$(document).ajaxStart($.blockUI).ajaxStop($.unblockUI);
+			// $(document).ajaxStart($.blockUI).ajaxStop($.unblockUI);
 			//cargarCombox();
 			cargarResponsables("responsablesFiltro");
 			mostrarTabla();

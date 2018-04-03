@@ -197,11 +197,24 @@ function ocultarMensajesErrorDetalleCaso(){
  * Modificar detalle
  ******************************************************************************/
 function mostrarFechaCaducidadModificarDetalle(){
+	var diasPosponerCaducidad = diasAdicionarCaducidad?diasAdicionarCaducidad:0;
 	confirmarCambioFechaHechos();
 	fechaCaduci = $("#fechaDeLosHechosMod").val();
 	var fecha = fechaCaduci.split("-");
 	var aniosCaducidad = $("#aniosCaducidadParam").val();
 	ano = parseInt(fecha[0]) + parseInt(aniosCaducidad);
+	
+	var tpmDateCaducidad = new Date(ano,fecha[1]-1,fecha[2]);
+	
+	var dateCaducidad = new Date(tpmDateCaducidad.getTime()+(diasPosponerCaducidad*24*60*60*1000)); //Posponemos la fecha de caducidad segun el parametros
+	console.log(new Date(ano,fecha[1]-1,fecha[2]));
+	for(var i=0;i<disabledDates.length;i++){
+		if(disabledDates[i] == dateCaducidad.getTime()){
+			dateCaducidad.setDate(dateCaducidad.getDate()+1);
+			i=0;
+		}
+	}
+	
 	$("#fechaDeCaducidadMod").val(ano + "-" + fecha[1] + "-" + fecha[2]);
 
 }
@@ -231,8 +244,10 @@ function modificarDetalleCaso() {
 	fecha = $("#fechaDeLosHechosMod").val().split("-");
 	var fechaHechos = new Date(fecha[0], fecha[1] - 1, fecha[2]);
 	var strFechaFin = $("#finFechaDeLosHechosMod").val();
+	var strFechaSolicitudPrej = $("#txtFechaPrejudicialMod").val();
 	var fechaFinHecho = "";
 	var fechaCaducidad = "";
+	var fechaSolicitudPrej = "";
 	
 	if(strFechaFin!=""){
 		fecha = $("#finFechaDeLosHechosMod").val().split("-");
@@ -240,6 +255,13 @@ function modificarDetalleCaso() {
 		fecha = $("#fechaDeCaducidadMod").val().split("-");
 		fechaCaducidad = new Date(fecha[0], fecha[1] - 1, fecha[2]);	
 	}
+	if(strFechaSolicitudPrej!=""){
+		fecha = strFechaSolicitudPrej.split("-");
+		fechaSolicitudPrej = new Date(fecha[0], fecha[1] - 1, fecha[2]);
+			
+	}
+	
+	
 	
 	var fechaCaducidadCambio = actualFechaCaducidad!=$("#finFechaDeLosHechosMod").val();
 	
@@ -250,6 +272,8 @@ function modificarDetalleCaso() {
 	data_caso += "&tipoCaso.codigo=" + $("#tipoCasoMod").val() + "&nombre=" + $("#nombreCasoMod").val()
 			+ "&fechaHecho=" + fechaHechos;
 	data_caso += (fechaFinHecho!="")?"&fechaFinHecho=" + fechaFinHecho:"";
+	
+	data_caso += (fechaSolicitudPrej!="")?"&fechaSolicitudPrejudicial=" + fechaSolicitudPrej:"";
 	
 	data_caso += "&numeroDespacho=" + $("#numeroDespachoMod").val() + "&nombreFuncionario="
 			+ $("#nombreFuncionarioMod").val();
@@ -2939,13 +2963,67 @@ function calcularInteresAbono(diasTranscurridos){
 
 
 function calcularInteresPrestamo(diasTranscurridos, prestamo){
-	var saldoInteresesPagados = prestamo.interesesPagados;
-	var interes = $("#txtPorcentajeInteresPrestamoModal").val()/100;
+	if(!prestamo.saldoCapital){
+		calcularInteresPrestamoSinAbono(true);
+	}else{
+		var saldoInteresesPagados = prestamo.interesesPagados;
+		var interes = $("#txtPorcentajeInteresPrestamoModal").val()/100;
+		var interesDiario = interes/30;
+		var totalInteresAcumulado = interesDiario*diasTranscurridos;
+		var valorInteres = Math.round(totalInteresAcumulado * prestamo.saldoCapital);
+		$("#txtInteresesModal").val((valorInteres+saldoInteresesPagados+prestamo.saldoInteres).toFixed(0));
+		$("#txtSaldoTotal").val(valorInteres+prestamo.saldoCapital);	
+	}
+	
+	
+}
+
+function calcularInteresPrestamoSinAbono(modificar){
+	
+	if(modificar){
+		var strFechaPrestamo = $("#txtFechaPrestamoModal").val();
+		var porcentajeInteres = $("#txtPorcentajeInteresPrestamoModal").val();
+		var valorPrestamo = $("#txtValorPrestamoModal").val();
+	}else{
+		var strFechaPrestamo = $("#txtFechaPrestamoModalAdicionar").val();
+		var porcentajeInteres = $("#txtPorcentajeInteresPrestamoModalAdicionar").val();
+		var valorPrestamo = $("#txtValorPrestamoModalAdicionar").val();	
+	}
+	
+	
+	if(!strFechaPrestamo || !porcentajeInteres || !valorPrestamo){
+		return;
+	}
+	
+	var fechaSplit = strFechaPrestamo.split("-");
+	var fechaPrestamo = new Date(fechaSplit[0], fechaSplit[1] - 1, fechaSplit[2]);
+	
+	var interes = porcentajeInteres/100;
+	
+	
+	var diferenciaDias = Math.floor((new Date().getTime()-fechaPrestamo.getTime())/(1000*60*60*24));
+	
+	
+	
+	
 	var interesDiario = interes/30;
-	var totalInteresAcumulado = interesDiario*diasTranscurridos;
-	var valorInteres = totalInteresAcumulado * prestamo.saldoCapital;
-	$("#txtInteresesModal").val((valorInteres+saldoInteresesPagados+prestamo.saldoInteres).toFixed(0));
-	$("#txtSaldoTotal").val(valorInteres+prestamo.saldoCapital);
+	var totalInteresAcumulado = interesDiario*diferenciaDias;
+	var valorPrestamo = parseInt(valorPrestamo);
+	
+	var valorInteres = totalInteresAcumulado * valorPrestamo;
+	
+	if(modificar){
+		$("#txtInteresesModal").val((valorInteres).toFixed(0));
+		$("#txtSaldoPrestamoModal").val(valorPrestamo);
+		$("#txtSaldoTotal").val(
++valorInteres);	
+	}else{
+		$("#txtInteresesModalAdicionar").val((valorInteres).toFixed(0));
+		$("#txtSaldoPrestamoModalAdicionar").val(valorPrestamo);
+		$("#txtSaldoTotalAdicionar").val(valorPrestamo+valorInteres);
+	}
+	
+	
 	
 }
 
@@ -2970,6 +3048,8 @@ function limpiarPrestamo(){
 }
 
 function mostrarFechaCaducidadDetalleCaso(){
+	var diasPosponerCaducidad = diasAdicionarCaducidad?diasAdicionarCaducidad:0;
+	
 	fechaCaduci = $("#finFechaDeLosHechosMod").val();
 	fechaInicioHechos = new Date($("#fechaDeLosHechosMod").val());
 	fechaFinHechos = new Date($("#finFechaDeLosHechosMod").val());
@@ -2980,6 +3060,18 @@ function mostrarFechaCaducidadDetalleCaso(){
 		var aniosCaducidad = $("#aniosCaducidadParam").val();
 		ano = parseInt(fecha[0]) + parseInt(aniosCaducidad);
 		$("#fechaDeCaducidadMod").val(ano + "-" + fecha[1] + "-" + fecha[2]);
+		
+		var tpmDateCaducidad = new Date(ano,fecha[1]-1,fecha[2]);
+		
+		var dateCaducidad = new Date(tpmDateCaducidad.getTime()+(diasPosponerCaducidad*24*60*60*1000)); //Posponemos la fecha de caducidad segun el parametros
+		console.log(new Date(ano,fecha[1]-1,fecha[2]));
+		for(var i=0;i<disabledDates.length;i++){
+			if(disabledDates[i] == dateCaducidad.getTime()){
+				dateCaducidad.setDate(dateCaducidad.getDate()+1);
+				i=0;
+			}
+		}
+		$("#fechaDeCaducidadMod").val(formatDate(dateCaducidad));
 	}else{
 		$("#finFechaDeLosHechosMod").val("");
 		$("#fechaDeCaducidadMod").val("");
@@ -3043,8 +3135,6 @@ function validarTipoMiembro(select){
 function getActividadesInfo(){
 	$("[name=nombreActividad]").not(".form-control").each(function(index,element){
 		
-		
-		actividadesArray
 		var vencimientoActividad = $(element).closest("[name=actividadParticular]").find("[name*=actividadVencimiento]").val();
 		
 		var nombre = $(element).text();
@@ -3056,4 +3146,68 @@ function getActividadesInfo(){
 		
 	});
 	console.log(actividadesArray);
+}
+
+
+function validarActividadConciliacionPrejudicialMod(){
+	var isValido = false; 
+	$.each(actividadesArray,function(index,data){
+		if(data.nombre == _nombreActividadPrej){
+			isValido = true;;
+		}
+	});
+	if(!isValido){
+		$("#txtFechaPrejudicialMod").val("");
+		$("#messageErrorDetalleCaso").html("No existe la actividad Audiencia de conciliación prejudicial").show();
+	}else{
+		$("#txtFechaPrejudicialMod").removeClass("campoTextoError");
+		$("#messageErrorDetalleCaso").html("").hide();
+	}
+	return isValido;
+}
+
+function validarFechaPrejudicialMod(){
+	var valido = true;
+	if($("#txtFechaPrejudicialMod").val()==""){
+		diasAdicionarCaducidad = 0;
+		valido = false;
+	}else if(validarActividadConciliacionPrejudicialMod() && validarDiferenciaFechaSolicitudPrejAudienciaMod()){
+		if($("#fechaDeCaducidadMod").val()==$("#txtFechaPrejudicialMod").val()){
+			$("#modal-AdvertenciaDemandaMismaDiaAudiencia").modal("show");
+		}
+		valido = true;
+	}
+	mostrarFechaCaducidadDetalleCaso();
+	return valido;
+}
+
+function validarDiferenciaFechaSolicitudPrejAudienciaMod(){
+	var fechaActividad;
+	var success = true;
+	$(actividadesArray).each(function(index,actividad){
+		if(actividad.nombre == _nombreActividadPrej){
+			if(actividad.fechaVencimiento==""){
+				// mostrarErrorFechaSolicitudPrejudicial("Antes debe ingresar la fecha de caducidad de la actividad "+_nombreActividadPrej);
+				$("#txtFechaPrejudicialMod").val("");
+				success=false;
+			}
+			var fechaActividad =  actividad.fechaVencimiento;
+			var fechaSolicitudPrej = getDateFormat($("#txtFechaPrejudicialMod").val());
+			var diferenciaMilis = fechaActividad.getTime()-fechaSolicitudPrej.getTime();
+			var dias = diferenciaMilis/(24*60*60*1000);
+			if(dias>90)
+				diasAdicionarCaducidad = 90;
+			else if(dias>0)
+				diasAdicionarCaducidad = dias;
+			else if(dias<0){
+				dias=0;
+				
+				$("#messageErrorDetalleCaso").html("La fecha de vencimiento de la actividad de "+_nombreActividadPrej+" es menor a la fecha de presentación de solicitud prejudicial").show();
+				$("#txtFechaPrejudicialMod").val("");
+				success = false;
+			}
+			mostrarFechaCaducidadDetalleCaso();
+	}
+	});
+	return success;
 }

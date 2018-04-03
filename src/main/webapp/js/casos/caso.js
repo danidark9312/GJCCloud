@@ -14,8 +14,8 @@ var filasActividadesParticulares = new Array();
 var countActividadesParticulares = 0;
 var codigoActivad = 10000000;
 var mensaje = '<div class="alert alert-danger" id="messageErrorAactividad" name="messageError" style="display: none">How quickly daft jumping zebras vex. <a class="alert-link" href="#">Alert Link</a>.</div>';
-var metodoOnchage = 'onchange="validarfechasTareas(this)"';
-var metodoOnchageActividad = 'onchange="validarFechasDesdeActividad(this)"';
+var metodoOnchage = 'onblur="validarfechasTareas(this);validarFechaHabilActividadTarea(this)"';
+var metodoOnchageActividad = 'onblur="validarFechasDesdeActividad(this);validarFechaHabilActividadTarea(this)"';
 var formularioNuevoCaso = null;
 var botonPresionado = null;
 var filaABorrar = null;
@@ -1798,7 +1798,10 @@ function validarfechasTareas(campoFechaTarea){
 // actividad
 function validarFechasDesdeActividad(campoFechaActividad){
 
-	var fechaActividad = new Date($(campoFechaActividad).val());
+		
+	var fechaActividad = getDateFormat($(campoFechaActividad).val());
+	
+	//var fechaActividad = new Date($(campoFechaActividad).val());
 	$(campoFechaActividad).closest("div[name=actividadParticular]").find("input[name^='vencimiento']").each(
 			function(ind, dato){
 
@@ -1811,7 +1814,29 @@ function validarFechasDesdeActividad(campoFechaActividad){
 				}
 
 			});
+	
+	
+	
 
+}
+
+function validarFechaHabilActividadTarea(campo){
+	
+	var fechaActividadTarea = getDateFormat($(campo).val());
+	
+	var dateChanged = false;
+	for(var i=0;i<disabledDates.length;i++){
+		if(disabledDates[i] == fechaActividadTarea.getTime()){
+			dateChanged = true;	
+			fechaActividadTarea.setDate(fechaActividadTarea.getDate()+1);
+			i=0;
+		}
+	}
+	
+	if(dateChanged){
+		$(campo).val(formatDate(fechaActividadTarea));
+		$("#modal-AdvertenciaFechaActividadTarea").modal('show');	
+	}
 }
 
 function guardarActividades(CodigosEquipo){

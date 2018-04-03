@@ -61,7 +61,7 @@
 							</label>
 							<span class="text-danger"> *</span>
 							<input type="date" class="form-control" id="finFechaDeLosHechosMod"
-								name="finFechaDeLosHechosMod" onblur="mostrarFechaCaducidadDetalleCaso()">
+								name="finFechaDeLosHechosMod" onblur="validarFechaPrejudicialMod()">
 						</div>
 						<div class="col-sm-4 b-r">
 							<label>
@@ -126,7 +126,7 @@
 							<label>
 								<spring:message code="label.detalleCaso.fechaPrejudicial" />
 							</label>
-							<input type="date" class="form-control" id="txtFechaPrejudicialmod" name="txtFechaPrejudicialmod" onblur="validarFechaPrejudicial()">
+							<input type="date" class="form-control" id="txtFechaPrejudicialMod" name="txtFechaPrejudicialmod" onblur="validarFechaPrejudicialMod()">
 						</div>
 					</div>
 					<!-- lugar del proceso -->

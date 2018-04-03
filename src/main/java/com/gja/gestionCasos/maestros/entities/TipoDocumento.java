@@ -43,7 +43,7 @@ public class TipoDocumento implements Serializable {
     	this.codigo = codigo;
     }
     
-    public TipoDocumento(Integer codigo, String documentoº) {
+    public TipoDocumento(Integer codigo, String documento) {
         this.codigo = codigo;
         this.documento = documento;        
     }
