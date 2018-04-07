@@ -900,7 +900,6 @@ function doAjaxPostAdd() {
 function getRadicadosAcumulados(formulario,ind, caso){
 	var rows = formulario.find("#tableRadicadosAcumulados tbody tr");
 	var datos = "";
-	var datos = "&radicadoSet[" + ind + "].instancia.codigo=";
 	
 	$.each(rows,function(index,row){
 		var tipoRadicado = getTipoRadicoByCodigo($(row).find("#tipoRadicado").val());
@@ -914,8 +913,7 @@ function getRadicadosAcumulados(formulario,ind, caso){
 		datos+="&radicadoSet[" + ind + "].radicadosAcumulados["+index+"].observacion="+$(row).find("#txtObservacionRadicado").val();
 		datos+="&radicadoSet[" + ind + "].radicadosAcumulados["+index+"].radicadoPK.codigoRadicadoAcumulado="+radicado;
 		
-	})
-	
+	});
 	
 	
 	return datos;
@@ -1460,7 +1458,8 @@ function validarFormulario(){
 		var nombreActividad = actividadesArray[i].nombreActividad;
 
 		for (var j = 0; j < cantTareas; j++){
-			if(EstaVacio($("#modal-nuevoCaso #vencimiento" + tareasActividadesArray[j].fila).val())){
+			var fechaObligatoria = $("#modal-nuevoCaso #vencimiento" + tareasActividadesArray[j].fila).closest("tr").find("input[name^='fechaObligatoria']").val();
+			if(fechaObligatoria=="S"&&EstaVacio($("#modal-nuevoCaso #vencimiento" + tareasActividadesArray[j].fila).val())){
 				$("#modal-nuevoCaso #vencimiento" + tareasActividadesArray[j].fila).addClass("campoTextoError");
 				isError = true;
 				erroresActividades.push("El campo fecha de vencimiento de la tarea " + (j + 1) + " en la actividad "
@@ -1775,6 +1774,9 @@ function validarfechasTareas(campoFechaTarea){
 	// Date($(dato1).find("input[name=txtFechaDeVencimientoActividad]").val());
 	var campoFechaActividad = $(campoFechaTarea).closest("div[name=actividadParticular]").find(
 			"input[name^='actividadVencimiento']");
+	
+	
+		
 	var fechaActividad = new Date($(campoFechaActividad).val());
 	var fechaTarea = new Date($(campoFechaTarea).val());
 	var noCambiarFecha = null;
@@ -2703,7 +2705,7 @@ function cargarActividadesTipoCaso(selectTipoCaso) {
 					html+='					<th style="width:25%">Estado<span class="text-danger"> *</span></th>';
 					html+='					<th class="hide">N\u00FAmero de d\u00EDas</th>';
 					html+='					<th class="hide">N\u00FAmero de notificaciones</th>';
-					html+='					<th style="width:20%">Fecha Vencimiento<span class="text-danger"> *</span></th>';
+					html+='					<th style="width:20%">Fecha Vencimiento</th>';
 					html+='					<th style="width:5%">Acción</th>';
 					html+='				</tr>';
 					html+='				</thead>';
@@ -2719,6 +2721,9 @@ function cargarActividadesTipoCaso(selectTipoCaso) {
 						html+='				<tr id="'+optionData.codigo+'Tarea">';
 						html+='					<td style="width:15%">'+optionDataTarea.nombreTarea+'<input type="hidden" value="'+optionDataTarea.nombreTarea+'" id="nombreTarea'+filaTareaActividad+'" name="nombreTarea'+filaTareaActividad+'"></td>';
 						html+='					<td style="width:15%">'+optionDataTarea.detalleTarea+'<input type="hidden" value="'+optionDataTarea.detalleTarea+'" id="detalleTarea'+filaTareaActividad+'" name="detalleTarea'+filaTareaActividad+'">';
+						
+						html+='					<input type="hidden" class="form-control" id="txtTareaPropia" name="fechaObligatoria'+filaTareaActividad+'" value="'+optionDataTarea.snObligatorioFechaVencimiento+'">';
+						
 						html+='					<input type="hidden" class="form-control" id="txtTareaPropia" name="txtTareaPropia" value="N"></td>';
 						html+='					<td style="width:20%"><select  id="responsable'+filaTareaActividad+'" name="responsable'+filaTareaActividad+'" multiple="multiple"></select></td>';
 						
@@ -2731,6 +2736,8 @@ function cargarActividadesTipoCaso(selectTipoCaso) {
 						html+="					<td class='hide'><input type='text' class='form-control' id='numeroDeAlertas"+filaTareaActividad+"' maxlength='3' name='numeroDeAlertas"+filaTareaActividad+"'></td>";
 						
 						html+='					<td style="width:20%">'+mensaje+'<input type="date" class="form-control" id="vencimiento'+filaTareaActividad+'" name="vencimiento'+filaTareaActividad+'"'+metodoOnchage+'></td>';
+						
+						
 						html+='					<td style="width:5%"><a href="javascript:void(0);" class="btn btn-danger btn-circle .btn-xs"  title="Eliminar Tarea"  onclick="mostrarModalEliminarTarea('+filaActividad+','+filaTareaActividad+',this);"  ><i class="glyphicon glyphicon-trash"></i></a></td>';
 						html+='				</tr>';
 
@@ -4240,6 +4247,24 @@ function validateCheckSinConteoModificacion(check){
 	
 }
 
+/*Si lo ingresado no esta en el autocomplete debe eliminiar elt exto*/
+function validateInputAutocomplete(dom){
+	var input = dom.value;
+	var radicadosList = document.autocompleteRadicados;
+	var isContain = false;
+	
+	for(var i = 0; i < radicadosList.length; i++){
+		if(radicadosList[i] == input){
+			isContain =  true;
+			break;
+		}
+	}
+	if(!isContain){
+		dom.value = "";
+	}
+	
+}
+
 
 function getAutocompleteRadicados(){
 	var radicados;
@@ -4260,7 +4285,7 @@ function getAutocompleteRadicados(){
 }
 
 var radicadosAcumulados = {
-		table : $("#tableRadicadosAcumulados"),
+		table : $("table#tableRadicadosAcumulados"),
 		radicados : getAutocompleteRadicados(),
 		init : function(context){
 			$(context).find("input#txtAutoCompleteRadicados").autocomplete({
@@ -4302,6 +4327,21 @@ function findAllDisabledDates(){
 	});
 }
 
+function validateTipoRadicado(dom){
+	value = dom.value
+	var row = $(dom).closest("tr");
+	if(value == 1){
+		row.find("#txtRadicadoAsociado").hide();
+		row.find("#txtAutoCompleteRadicados").hide();
+	}else if(value == 2){
+		row.find("#txtRadicadoAsociado").val("").hide();
+		row.find("#txtAutoCompleteRadicados").show();
+	}else if (value == 3){
+		row.find("#txtRadicadoAsociado").show();
+		row.find("#txtAutoCompleteRadicados").val("").hide();
+	}
+	
+}
 
 function getDateFormat(strDate){
 	var dateSplit = strDate.split("-");

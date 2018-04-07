@@ -32,6 +32,11 @@
 		.modal-dialog{
 		    overflow-y: initial !important
 		}
+		
+		.ui-autocomplete.ui-front.ui-menu.ui-widget.ui-widget-content.ui-corner-all{
+		z-index: 2000;
+		
+		}
 /* 		.modal-body{ */
 /* 		    overflow-y: auto; */
 /* 		} */

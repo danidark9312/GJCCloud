@@ -32,9 +32,26 @@
 			<input type="date" class="form-control" id="txtFechaDeLosHechos" name="txtFechaDeLosHechos"
 				onfocusout="if(validarFechaMenorIgualActual(this.id)){validarFechaInicioHechos();mostrarFechaCaducidad();}">
 		</div>
+		<div class="col-sm-4 b-r">
+			<label>
+				<spring:message code="label.campo.fechaFinDeLosHechos" />
+			</label>
+			<span class="text-danger"> *</span>
+			<input type="date" class="form-control" id="txtFinFechaDeLosHechos" name="txtFinFechaDeLosHechos"
+				onfocusout="if(validarFechaMenorIgualActual(this.id)){mostrarFechaCaducidad();}">
+		</div>
+<!-- 		<div class="col-sm-3"> -->
+			
+<!-- 		</div> -->
+		<div class="col-sm-2" style="text-align: center;">
+			<label>
+				<spring:message code="label.campo.sinConteoActual" />
+			</label>
+			<input type="checkbox" class="form-control" id="chkSinConteo"
+				onchange="validateCheckSinConteo(this)">
+		</div>
 		
 		<!-- fecha inicio y fin de los hechos -->
-		
 		<div class="col-sm-4 b-r" style="display:none">
 			<label>
 				<spring:message code="label.detalleCaso.tipoRadicado" />
@@ -56,7 +73,6 @@
 			<input type="text" class="form-control" id="txtAutoCompleteRadicados" name="txtAutoCompleteRadicados" style="display:none" onchange="validateInputAutocomplete(this)" />
 		</div>
 		
-	
 		
 	</div>
 	
@@ -64,33 +80,17 @@
 	
 	<div class=row>
 		<!-- fecha inicio y fin de los hechos -->
-		<div class="col-sm-2 b-r">
-			<label>
-				<spring:message code="label.campo.sinConteoActual" />
-			</label>
-		</div>
-		<div class="col-sm-2 b-r">
-			<input type="checkbox" class="form-control" id="chkSinConteo"
-				onchange="validateCheckSinConteo(this)">
-		</div>
-	</div>
-	
-	<div class=row>
-		<!-- fecha inicio y fin de los hechos -->
-		
-		<div class="col-sm-4 b-r">
-			<label>
-				<spring:message code="label.campo.fechaFinDeLosHechos" />
-			</label>
-			<span class="text-danger"> *</span>
-			<input type="date" class="form-control" id="txtFinFechaDeLosHechos" name="txtFinFechaDeLosHechos"
-				onfocusout="if(validarFechaMenorIgualActual(this.id)){mostrarFechaCaducidad();}">
-		</div>
 		<div class="col-sm-4 b-r">
 			<label>
 				<spring:message code="label.campo.fechaDeCaducidad" />
 			</label>
 			<input type="date" class="form-control" id="txtFechaDeCaducidad" name="txtFechaDeLosHechos" disabled="true">
+		</div>
+		<div class="col-sm-4 b-r">
+			<label>
+				<spring:message code="label.campo.fechaPrejudicial" />
+			</label>
+			<input type="date" class="form-control" id="txtFechaPrejudicial" name="txtFechaPrejudicial" onblur="validarFechaPrejudicial()">
 		</div>
 	</div>
 	<div class=row>
@@ -102,7 +102,7 @@
 				name="txtPaisDeLosHechos"
 				onchange="cargarDepartamentosPorPais(this,'txtDepartamentoDeLosHechos','txtMunicipioDeLosHechos')"></select>
 		</div>
-		<div class="col-sm-4 b-r">
+		<div class="col-sm-4">
 			<label>
 				<spring:message code="label.campo.departamentoDeLosHechos" />
 			</label>
@@ -139,14 +139,7 @@
 
 		</div>
 	</div>
-	<div class=row>
-		<div class="col-sm-4 b-r">
-			<label>
-				<spring:message code="label.campo.fechaPrejudicial" />
-			</label>
-			<input type="date" class="form-control" id="txtFechaPrejudicial" name="txtFechaPrejudicial" onblur="validarFechaPrejudicial()">
-		</div>
-	</div>
+	
 	<br>
 	<hr class="hr-line-solid">
 	<br>

@@ -1,7 +1,7 @@
 <c:if test="${referenciadores.size() > 0}">
 <div class="panel-group">
 <div class="panel panel-default">
-	<div class="panel-heading" style="font-size:15px">Referenciados</div>
+	<div class="panel-heading" style="font-size:15px">Referenciador</div>
 </div>
 	<div class="panel-body">
 <c:set var="countIntegrante" value="0" scope="page" />

@@ -1661,6 +1661,10 @@ function modificarRadicado(){
 					data_caso += "&radicadoSet[" + ind + "].usuarioUltimaModificacion=" + $("#idusercreacion").val();
 					data_caso += "&radicadoSet[" + ind + "].acumulado=" + "N";
 					data_caso += "&radicadoSet[" + ind + "].caso.codigo=" + $("#codigoParam").val();
+					
+					data_caso += getRadicadosAcumulados($(formularioRadicado),ind, $("#codigoParam").val());
+					
+					
 				}
 
 			});
@@ -2387,7 +2391,9 @@ function modificarActividades(){
 					$("#messageExitoso").html("Se actualiz\u00f3 las actividades exitosamente.");
 					$("#messageExitoso").show();
 					setTimeout("limpiarMensajeExito();", 10000);
+					updateOrderActividades();
 					crearUrlRedireccionarA("addActividad");
+					
 				}else{
 					$("#messageError").html("No se fue posible guardar el caso.");
 					$("#messageError").show();
@@ -2998,7 +3004,7 @@ function calcularInteresPrestamoSinAbono(modificar){
 	var fechaSplit = strFechaPrestamo.split("-");
 	var fechaPrestamo = new Date(fechaSplit[0], fechaSplit[1] - 1, fechaSplit[2]);
 	
-	var interes = porcentajeInteres/100;
+	var interes = (porcentajeInteres/100).toFixed(2);
 	
 	
 	var diferenciaDias = Math.floor((new Date().getTime()-fechaPrestamo.getTime())/(1000*60*60*24));
@@ -3010,15 +3016,14 @@ function calcularInteresPrestamoSinAbono(modificar){
 	var totalInteresAcumulado = interesDiario*diferenciaDias;
 	var valorPrestamo = parseInt(valorPrestamo);
 	
-	var valorInteres = totalInteresAcumulado * valorPrestamo;
+	var valorInteres = parseFloat((totalInteresAcumulado * valorPrestamo).toFixed(0));
 	
 	if(modificar){
-		$("#txtInteresesModal").val((valorInteres).toFixed(0));
+		$("#txtInteresesModal").val(valorInteres);
 		$("#txtSaldoPrestamoModal").val(valorPrestamo);
-		$("#txtSaldoTotal").val(
-+valorInteres);	
+		$("#txtSaldoTotal").val(valorPrestamo+valorInteres);	
 	}else{
-		$("#txtInteresesModalAdicionar").val((valorInteres).toFixed(0));
+		$("#txtInteresesModalAdicionar").val(valorInteres);
 		$("#txtSaldoPrestamoModalAdicionar").val(valorPrestamo);
 		$("#txtSaldoTotalAdicionar").val(valorPrestamo+valorInteres);
 	}
@@ -3211,3 +3216,36 @@ function validarDiferenciaFechaSolicitudPrejAudienciaMod(){
 	});
 	return success;
 }
+
+
+
+var radicadosAcumuladosEdit = {
+		// table : $("#formularioRadicado #tableRadicadosAcumulados"),
+		radicados : undefined, // Esto lo consultamos en el ready
+		init : function(context){
+			$(context).find("input#txtAutoCompleteRadicados").autocomplete({
+				source : radicadosAcumulados.radicados,
+				minLength: 3
+			});
+		},
+		remove : function(tr){
+			var table = this.getTable(tr);
+			tr.remove();
+			if(table[0].rows.length <= 1){
+				table.hide();
+			}
+		},
+		add: function(context){
+			var table = this.getTable(context);
+			table.show();
+			var firstRowHtml = $("#tableRadicadosAcumulados tbody tr:eq(0)").clone();
+			table.find("tbody").append(firstRowHtml);
+			table.find("input#txtAutoCompleteRadicados").last().autocomplete({
+				source : radicadosAcumulados.radicados,
+				minLength: 3
+			});
+		},
+		getTable : function(context){
+			return $(context).closest("#formularioRadicado").find("#tableRadicadosAcumulados");
+		}
+};

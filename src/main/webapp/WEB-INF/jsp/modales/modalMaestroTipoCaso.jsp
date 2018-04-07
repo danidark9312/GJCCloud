@@ -107,8 +107,8 @@
 												</c:forEach>
 											</select>
 									</div>
-									
-									<div class="col-sm-4" style="text-align: right;">
+									<br/>
+									<div class="col-sm-12" style="text-align: right;margin-top: 15px;">
 										<a href="javascript:adicionarActividad()" class="btn btn-success" style="background-color: #449D44;"> <i
 											class="glyphicon glyphicon-plus"></i>&nbsp;<spring:message code="label.maestroTipoCaso.adicionarActividad" />
 										</a>

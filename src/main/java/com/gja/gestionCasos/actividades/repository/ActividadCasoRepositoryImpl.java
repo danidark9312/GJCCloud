@@ -74,6 +74,28 @@ public class ActividadCasoRepositoryImpl extends AbstractRepository<ActividadCas
 	}
 	
 	@SuppressWarnings("unchecked")
+	public List<ActividadCaso> getActividadCompladaByCaso(Integer codigoCaso) throws DAOException {
+		List<ActividadCaso> actividades=null;
+		try {
+			actividades = entityManager.createQuery("SELECT distinct(ac) FROM ActividadCaso ac, TareaParticularCaso tpc, ResponsableTarea rt WHERE"
+					+ " ac.codigoActividadParticular = tpc.actividadParticular.codigoActividadParticular AND tpc.codigoTarea = rt.responsableTareaPK.codigoTareaparticular"
+					+ " AND rt.responsableTareaPK.codigoCaso = :pCodigoCaso and ac.finalizada = :pFinalizada order by ac.orden asc")
+					.setParameter("pCodigoCaso", codigoCaso)
+					.setParameter("pFinalizada", "S")
+					.getResultList();
+		} catch (IllegalStateException e) {
+			LOG.error(
+					"IllegalStateException: Error consultando la cantidad de actividades de los tipos de casos activos. El error es: "
+							+ e.getMessage(), e);
+			throw new DAOException(e.getMessage());
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new DAOException(e.getMessage());
+		}
+		return actividades;
+	}
+	
+	@SuppressWarnings("unchecked")
 	public int updateActividadCasoOrden(ActividadCaso actividadCaso) throws DAOException {
 		int result = 0;
 		try {

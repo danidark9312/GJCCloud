@@ -26,7 +26,7 @@
 	<style>
 	
 	.ui-datepicker{
-	font-size: 20px;
+	font-size: 17px;
 	}
 	.ui-datepicker-month{
 	font-size: 15px;
@@ -57,7 +57,7 @@
 													</h5>
 												</div>
 												<div class="ibox-content">
-													<form role="form" class="panel-body">
+													<form role="form" class="panel-body" >
 														<input type="hidden" name="${_csrf.parameterName}" id="${_csrf.parameterName}" value="${_csrf.token}" />
 														<input type='hidden' name='idusercreacion' id='idusercreacion'
 															value='<sec:authentication property="principal.id"/>' />
@@ -70,7 +70,7 @@
 															</div>
 														</div>
 														<div class="row">
-															<div class="col-md-8">
+															<div class="col-md-8" style="margin-top: 87px;">
 																<div class="form-group col-md-12" id="datepickerDiv">
 																</div>
 															</div>

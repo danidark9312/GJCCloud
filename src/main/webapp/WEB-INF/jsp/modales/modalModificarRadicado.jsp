@@ -44,6 +44,36 @@
 								</div>
 							</div>
 						</div>
+
+						<div class="row" style="margin-top: 25px">
+							<div class="col-sm-12 b-r">
+								<div class="col-sm-12" style="text-align: center;">
+									<a href="javascript:void(0)" class="btn btn-success"
+										onclick="radicadosAcumuladosEdit.add(this)"
+										style="background-color: #449D44;"> <i
+										class="glyphicon glyphicon-plus"></i>Asociar radicado
+										acumulado
+									</a>
+								</div>
+							</div>
+						</div>
+						
+						<table class="table table-striped" id="tableRadicadosAcumulados" style="display: none">
+    <thead>
+      <tr>
+        <th><spring:message code="label.detalleCaso.tipoRadicado" /></th>
+		<th><spring:message code="label.detalleCaso.radicadoAsociado" /></th>
+		<th>Observacion</th>
+		<th>Eliminar</th>
+      </tr>
+    </thead>
+    <tbody>
+      
+      
+    </tbody>
+  </table>
+
+
 						<div name="formularioAcumulado" id="formularioAcumulado" style="display: none;">
 							<div class="row">
 								<div class="col-sm-6 b-r">

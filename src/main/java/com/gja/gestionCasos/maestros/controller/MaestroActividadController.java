@@ -143,6 +143,7 @@ public class MaestroActividadController {
 				jsO = new JSONObject();
 				jsO.put("codigoActividad", actividad.getCdactividad());
 				jsO.put("nombreActividad", actividad.getDsactividad());
+				
 				jsO.put("papelera",
 						"<a data-toggle='modal' class='btn btn-success btn-circle .btn-xs' style='background-color: red; border:0;' onclick='eliminarActividad("
 								+ actividad.getCdactividad()

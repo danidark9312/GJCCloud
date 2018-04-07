@@ -28,7 +28,7 @@ function mostrarTablaCasosAbogado(){
 	tablaHtml += "	<tbody>";
 	tablaHtml += "</tbody>";
 	tablaHtml += "</table>";
-	$("#tablaListadoTiposCasos").html(tablaHtml);
+	$("#tablaCasosReasignar").html(tablaHtml);
 	oTable = $('#datatableCasos').dataTable({
 		"bProcessing": true,
 	    "sAjaxSource": contexto + "/maestroReasignacionCasos/consultarCasosAbogado?id=" + $("#cmbFiltroAbogado").val(),
@@ -134,7 +134,7 @@ function migrarCasosAbogado(){
 function validarAbogadoDestino(){
 	var isExito = false;
 	if(!$("#cmbAbogadoDestino").val() || !$("#cmbFiltroAbogado").val()){
-		$("#messageError a").text("El campo abogado y abogado destino es necesario");
+		$("#messageError a").text("El campo Abogado Actual y Nuevo Abogado Asignado es necesario");
 		$("#messageError").show();
 		isExito = false;
 	}else{
@@ -148,7 +148,7 @@ function validarAbogadoDestino(){
 function validarCasosSeleccionado(){
 	var isExito = false;
 	if($("#datatableCasos input[name=chkReasignar]:checked").length==0){
-		$("#messageError a").text("El campo abogado destino es necesario");
+		$("#messageError a").text("Debe seleccionar al menos un caso");
 		$("#messageError").show();
 		isExito = false;
 	}else{

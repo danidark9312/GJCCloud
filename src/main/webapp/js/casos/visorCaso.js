@@ -204,21 +204,7 @@ function ocultarMensaje(){
 	$("#messageErrorCasoOfLine").hide(); 
 }
 
-function validateTipoRadicado(dom){
-	value = dom.value
-	var row = $(dom).closest("tr");
-	if(value == 1){
-		row.find("#txtRadicadoAsociado").hide();
-		row.find("#txtAutoCompleteRadicados").hide();
-	}else if(value == 2){
-		row.find("#txtRadicadoAsociado").val("").hide();
-		row.find("#txtAutoCompleteRadicados").show();
-	}else if (value == 3){
-		row.find("#txtRadicadoAsociado").show();
-		row.find("#txtAutoCompleteRadicados").val("").hide();
-	}
-	
-}
+
 
 function setRadicadoAutocomplete(){
 	
@@ -240,20 +226,4 @@ function setRadicadoAutocomplete(){
 	
 	;
 }
-/*Si lo ingresado no esta en el autocomplete debe eliminiar elt exto*/
-function validateInputAutocomplete(dom){
-	var input = dom.value;
-	var radicadosList = document.autocompleteRadicados;
-	var isContain = false;
-	
-	for(var i = 0; i < radicadosList.length; i++){
-		if(radicadosList[i] == input){
-			isContain =  true;
-			break;
-		}
-	}
-	if(!isContain){
-		dom.value = "";
-	}
-	
-}
+

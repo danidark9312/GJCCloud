@@ -3,6 +3,8 @@ var myDropzonePrestamo = null;
 
 $(document).ready(
 		function() {
+			radicadosAcumuladosEdit.radicados = getAutocompleteRadicados();
+			radicadosAcumuladosEdit.init("#formularioRadicado");
 			$("#alertErrorEliminacionMiembro").hide()
 			try {
 				waitingDialog.hide();
@@ -388,20 +390,31 @@ function _setearTextos(){
 function enableSortPendientesActividades(){
 	 $( "#sortedPanels" ).sortable({
 		 stop : function( event, ui ){
-			 var data = "";
-			$("#sortedPanels>div").each(function(index,div){
-				if(index == 0){
-					$("#estadoProcesal").text($(div).find("label[name=nombreActividad]").text());
-				}
-				data+="&listaActividadesCaso["+index+"].codigoActividadParticular="+$(div).attr("code");
-				data+="&listaActividadesCaso["+index+"].orden="+index;
-				// console.log($(data).attr("order"));
-			});
-			$.get(contexto+"/caso/updateActividadesCasoOrden?"+data,function(data){
-				console.log(data);
-			});
+			 updateOrderActividades();
 		 }
 	 });
 	  $("#sortedPanels" ).disableSelection();
-	  
+}
+
+function updateOrderActividades(){
+	 var data = "";
+	 var lastIndex = 0;
+	$("#sortedPanels>div").each(function(index,div){
+		if(index == 0){
+			$("#estadoProcesal").text($(div).find("label[name=nombreActividad]").text());
+		}
+		data+="&listaActividadesCaso["+index+"].codigoActividadParticular="+$(div).attr("code");
+		data+="&listaActividadesCaso["+index+"].orden="+index;
+		// console.log($(data).attr("order"));
+		lastIndex = index+1;
+	});
+	$("#panelActividadesCompletadas>div").each(function(index,div){
+		data+="&listaActividadesCaso["+(lastIndex+index)+"].codigoActividadParticular="+$(div).attr("code");
+		data+="&listaActividadesCaso["+(lastIndex+index)+"].orden="+(lastIndex+index);
+		// console.log($(data).attr("order"));
+	});
+	$.get(contexto+"/caso/updateActividadesCasoOrden?"+data,function(data){
+		console.log(data);
+	});
+
 }

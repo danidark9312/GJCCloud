@@ -86,15 +86,15 @@ public class Radicado implements Serializable {
     private Radicado radicadoAcumulado;
     
     @OneToMany(mappedBy = "radicadoPK.radicado", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    private Set<RadicadoAcumulado> radicadosAcumulados;
+    private List<RadicadoAcumulado> radicadosAcumulados;
 
    
-	public Set<RadicadoAcumulado> getRadicadosAcumulados() {
+	public List<RadicadoAcumulado> getRadicadosAcumulados() {
 		return radicadosAcumulados;
 	}
 
 
-	public void setRadicadosAcumulados(Set<RadicadoAcumulado> radicadosAcumulados) {
+	public void setRadicadosAcumulados(List<RadicadoAcumulado> radicadosAcumulados) {
 		this.radicadosAcumulados = radicadosAcumulados;
 	}
 

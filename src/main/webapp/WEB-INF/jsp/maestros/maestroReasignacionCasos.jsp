@@ -39,7 +39,7 @@
 											<div class="ibox float-e-margins">
 												<div class="ibox-title">
 													<h5>
-														<spring:message code="label.maestroCalendarioJudicial.titulo" />
+														<spring:message code="label.maestroReasignacionCasos.titulo" />
 													</h5>
 												</div>
 												<div class="ibox-content">
@@ -56,7 +56,7 @@
 															</div>
 														</div>
 														<div class="row">														
-															<div class="form-group col-md-3">
+															<div class="form-group col-md-6">
 																<label>
 																	<spring:message code="label.maestroReasignacionCasos.abogado" />
 																</label>
@@ -67,36 +67,43 @@
 																  </c:forEach>
 																</select>
 															</div>
-															<div class="form-group col-md-1">
-															<br/>
-																<a data-toggle="modal" onclick="migrarCasosAbogado()" class="btn btn-primary btn-circle .btn-xs"
-																	style="background-color: #314B7E; border: 0;"
-																	title="<spring:message code="label.maestroReasignacionCasos.reasignarButton" />"> <i
-																	class="glyphicon glyphicon-random"></i>
-																</a>
-															</div>
-															<div class="form-group col-md-3">
+<!-- 															<div class="form-group col-md-1"> -->
+<!-- 															<br/> -->
+<!-- 																<a data-toggle="modal" onclick="migrarCasosAbogado()" class="btn btn-primary btn-circle .btn-xs" -->
+<!-- 																	style="background-color: #314B7E; border: 0;" -->
+<%-- 																	title="<spring:message code="label.maestroReasignacionCasos.reasignarButton" />"> <i --%>
+<!-- 																	class="glyphicon glyphicon-random"></i> -->
+<!-- 																</a> -->
+<!-- 															</div> -->
+															<div class="form-group col-md-6">
 																<label>
 																	<spring:message code="label.maestroReasignacionCasos.abogadoDestino" />
 																</label>
 																<select class="form-control m-b" id="cmbAbogadoDestino" >
 																<option value="">Seleccionar</option>
 																  <c:forEach var="abogado" items="${abogados}">
-																		<option value="${abogado.id}"><c:out value="${abogado.nombre}"/></option>
+																		<option value="${abogado.id}"><c:out value="${abogado.nombre} ${abogado.apellido}"/></option>
 																  </c:forEach>
 																</select>
 															</div>
-															<div class="row" style= "text-align: right; padding-right: 1%; display: none;" ">
-																	<div form-group col-md-3 btns-forms hidden-sm hidden-xs text-right>
-																		<label></label>
-																		<button class="btn btn-azul" type="button" onclick="mostrarTablaCasosAbogado();">Buscar</button>
-																	</div>																
-															</div>
-														</div>
-														<div id="tablaListadoTiposCasos"></div>
+															
+														<div id="tablaCasosReasignar"></div>
 														<div class="row"></div>
 														<!-- TABLA -->
-														<div id="tablaListado"></div>
+														
+														<div class="row" style= "text-align: right; padding-right: 1%; ">
+																<div class="col-sm-6">
+																	<button type="button" class="btn btn-azul"
+																		data-dismiss="modal" style="width: 100px;">
+																		<spring:message code="label.maestroReasignacionCasos.cancelar" />
+																		</button>
+																</div>
+																<div class="col-sm-6">
+																	<button type="button" class="btn btn-azul" style="float:left"
+																		onclick="migrarCasosAbogado()"><spring:message code="label.maestroReasignacionCasos.reasignarButton"/></button>
+																</div>
+															</div>
+														
 														<hr class="border-bottom">
 
 													</form>

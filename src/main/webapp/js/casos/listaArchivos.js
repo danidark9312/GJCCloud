@@ -81,7 +81,7 @@ function listaArchivos() {
 	                      	{ "mDataProp": "nombreAutor", "bSortable": false, "sWidth":"20%" },	                      	
 							{ "mDataProp": "nombreArchivo","bSortable": false, "sWidth":"20%" },
 							{ "mRender": function ( full, type, data) {
-								return '<input value="'+data.descripcion+'" type="text" onkeypress="return saveDescripcion(event,this,'+data.idArchivo+')"/>';
+								return '<textarea maxlength = "100" ondrop="return false" onpaste="return false" onkeypress="return saveDescripcion(event,this,'+data.idArchivo+')"/>'+data.descripcion+'</textarea>';
 							}},
 							{ "mDataProp": "fechaCreacion","bSortable": false, "sWidth":"20%" },
 							{ "mDataProp": "descargar","bSortable": false, "sWidth":"20%" },
@@ -144,8 +144,8 @@ function listaArchivos() {
 	}
 }
 
+
 function saveDescripcion(event, dom, id){
-	console.log(event);
 	if(event.keyCode == 13){
 		var parameters = "id="+id+"&descripcion="+dom.value;
 		$.get( contexto + "/listaArchivos/saveDescripcionArchivo?" + parameters, function( data ) {

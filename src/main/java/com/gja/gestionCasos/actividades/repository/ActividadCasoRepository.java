@@ -22,4 +22,5 @@ public interface ActividadCasoRepository {
 	public List<ActividadCaso> obtenerActividadesVencidas() throws DAOException, BusinessException;
 	int updateActividadCasoOrden(ActividadCaso actividadCaso) throws DAOException;
 	List<ActividadCaso> getActividadPendienteByCaso(Integer codigoCaso) throws DAOException;
+	List<ActividadCaso> getActividadCompladaByCaso(Integer codigoCaso) throws DAOException;
 }

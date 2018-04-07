@@ -21,10 +21,10 @@
 				
 				<div class="panel panel panel-success">
 					<div class="panel-heading">Actividades Completadas</div>
-					<div class="panel-body">
+					<div class="panel-body" id="panelActividadesCompletadas">
 						<c:forEach items="${completadas}" var="actividad">
 						<c:if test="${actividad.snActiva ==  'S'}">
-						<div class="col-sm-12 show" name="actividadParticular">
+						<div class="col-sm-12 show" name="actividadParticular" order="${actividad.orden}" code="${actividad.codigoActividadParticular}">
 							<div class="panel panel-default">
 								<div class="panel-heading">
 									<div class="row">

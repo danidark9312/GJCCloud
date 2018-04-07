@@ -178,7 +178,7 @@ public class CasoServiceImpl implements CasoService {
 		
 		if (radicados != null) {
 			for (Radicado radicado : radicados) {
-				// se ingresan las fechas de creación y ultima modificación
+				// se ingresan las fechas de creaciï¿½n y ultima modificaciï¿½n
 				radicado.setCaso(caso);
 				radicado.getRadicadoPK().setCodigoCaso(caso.getCodigo());
 				radicado.setFechaCreacion(new Date());
@@ -219,7 +219,9 @@ public class CasoServiceImpl implements CasoService {
 				demandantes.add(casoEquipoCaso);
 		}
 		
+		
 		if (actividades != null && actividades.getListaActividadesCaso() != null) {
+			int orden = 0;
 			for (ActividadCaso actividad : actividades.getListaActividadesCaso()) {
 				
 				if (actividad != null && actividad.getTareaParticularCasoSet()!=null) {
@@ -236,6 +238,7 @@ public class CasoServiceImpl implements CasoService {
 							}
 						}
 					}
+					actividad.setOrden(orden++);
 					 actividad = actividadCasoService.guardarActividadCaso(actividad,demandantes);
 				}
 				if (Parametros.getCodigoActividadPropiaNo().equals(actividad.getEsActividadPropia())) {					
@@ -264,12 +267,21 @@ public class CasoServiceImpl implements CasoService {
 	}
 
 	private String getEstadoProcesalByCaso(Caso caso) throws DAOException {
-		List<ActividadCaso> actividadByCaso = actividadCasoRepository.getActividadPendienteByCaso(caso.getCodigo());
-		if(actividadByCaso!=null && actividadByCaso.size()>0) {
-			return actividadByCaso.get(0).getNombreActividad();
-		}else {
-			return "";
+		String nombreActividad = "";
+		List<ActividadCaso> actividadesPendientes = actividadCasoRepository.getActividadPendienteByCaso(caso.getCodigo());
+		if(actividadesPendientes!=null && actividadesPendientes.size()>0) {
+			nombreActividad = actividadesPendientes.get(0).getNombreActividad();
 		}
+		/*Si no hay actividades pendientes traemos la ultima actividad completada*/
+		if(nombreActividad.equals("")) {
+			List<ActividadCaso> actividadesCompletadas = actividadCasoRepository.getActividadCompladaByCaso(caso.getCodigo());
+			if(actividadesCompletadas!=null && actividadesCompletadas.size()>0) {
+				nombreActividad = actividadesCompletadas.get(0).getNombreActividad();
+			}	
+		}
+		
+		
+		return nombreActividad;
 	}
 
 	public Long getCountFilter(CasoFiltro caso) {
@@ -322,7 +334,7 @@ public class CasoServiceImpl implements CasoService {
 		StringBuilder cuerpoMensaje = new StringBuilder();
 		
 		cuerpoMensaje.append("Se le informa que el caso "+caso.getNombre()+" con codigo: "+caso.getCodigo()+" fue modificado y ahora su fecha de caducidad sera "+simpleDateFormat.format(caso.getFechaCaducidad())+"\n\n");
-		cuerpoMensaje.append("La modificación fue realizada por "+user.getNombre()+" "+user.getApellido());
+		cuerpoMensaje.append("La modificaciï¿½n fue realizada por "+user.getNombre()+" "+user.getApellido());
 		
 		helper.setTo((String[]) to.toArray(new String[0]));
 		helper.setSubject(Parametros.getAsuntoModificacionFechas() + " " + caso.getNombre());
@@ -397,7 +409,7 @@ public class CasoServiceImpl implements CasoService {
 			String estado = casoRepository.getEstadoCaso(casoModificado);
 			cuerpoMensaje.append("Nombre Caso: " + casoModificado.getNombre() + "\n");
 			cuerpoMensaje.append("Estado: " + (estado != null ? estado : "") + "\n");
-			cuerpoMensaje.append("Justificación: " + justificacion.getJustificacion() + "\n");
+			cuerpoMensaje.append("Justificaciï¿½n: " + justificacion.getJustificacion() + "\n");
 			helper.setTo((String[]) to.toArray(new String[0]));
 			helper.setSubject(Parametros.getAsuntoActualizacion() + " " + casoModificado.getNombre());
 			helper.setText(cuerpoMensaje.toString());

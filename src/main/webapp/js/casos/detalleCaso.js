@@ -365,7 +365,7 @@ function mostrarTablaRadicado(codigo) {
 function fnFormatDetails ( nTr )
 {
     var radicadosAcumulados = radicadosTable.fnGetData( nTr ).radicadosAcumulados;
-    var sOut = '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">';
+    var sOut = '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;" class="table table-striped dataTable no-footer" width = "40%">';
     sOut += '<tr><th colspan=2 >Radicados Acumulados:</th></tr>';
     sOut += '<tr><th>Tipo</th><th>Número</th></tr>';
     $.each(radicadosAcumulados,function(index,radicado){

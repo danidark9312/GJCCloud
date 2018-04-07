@@ -203,6 +203,7 @@ public class MaestroController {
 					jsOTareas= new JSONObject();
 					jsOTareas.put("nombreTarea", tarea.getDstarea());
 					jsOTareas.put("detalleTarea", tarea.getDsdetalle());
+					jsOTareas.put("snObligatorioFechaVencimiento", tarea.getSnObligatorioFechaVencimiento());
 					
 					
 					

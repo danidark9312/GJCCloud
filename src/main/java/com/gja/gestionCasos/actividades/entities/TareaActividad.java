@@ -52,8 +52,21 @@ public class TareaActividad implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonBackReference
     private Actividad cdactividad;
+    
+    @Column(name = "snobligatoriofechavencimiento")
+    private String snObligatorioFechaVencimiento;
 
-    public TareaActividad() {
+    
+    
+    public String getSnObligatorioFechaVencimiento() {
+		return snObligatorioFechaVencimiento;
+	}
+
+	public void setSnObligatorioFechaVencimiento(String snObligatorioFechaVencimiento) {
+		this.snObligatorioFechaVencimiento = snObligatorioFechaVencimiento;
+	}
+
+	public TareaActividad() {
     }
 
     public TareaActividad(Integer cdtareaactividad) {

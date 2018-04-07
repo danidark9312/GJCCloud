@@ -85,12 +85,19 @@
 										<input id="codigoTarea" name="codigoTarea" type="hidden" />
 										<input id="codigoTareaActividad" name="codigoTareaActividad" type="hidden" value="-1" />
 									</div>
-									<div class="col-sm-9" id="campoTareaDetalle" name="campoTareaDetalle">
+									
+									<div class="col-sm-4" id="campoTareaDetalle" name="campoTareaDetalle">
 										<label>
 											<spring:message code="label.maestroActividad.detalleTarea" />
 										</label>
 										<input id="detalleTarea" name="detalleTarea" type="text" class="form-control" required="required"
 											maxlength="255" />
+									</div>
+									<div class="col-sm-5" id="campoTareaNombre" name="campoTareaNombre">
+										<label>
+											<spring:message code="label.maestroTipoCaso.requiereFechaVencimiento" />
+										</label>
+										<input id="chckFechaVencimientoObligatoria" name="chckFechaVencimientoObligatoria" type="checkbox" class="form-control"/>
 									</div>
 									<div class="col-sm-12">&nbsp;</div>
 									<div class="col-sm-12" style="text-align: right;">
@@ -102,8 +109,9 @@
 										<table id="tablaTareas" name="tablaTareas" class="table table-striped">
 											<thead>
 												<tr>
-													<th style="width: 30%"><spring:message code="label.maestroActividad.tarea" /></th>
-													<th style="width: 60%"><spring:message code="label.maestroActividad.detalleTarea" /></th>
+													<th style="width: 20%"><spring:message code="label.maestroActividad.tarea" /></th>
+													<th style="width: 40%"><spring:message code="label.maestroActividad.detalleTarea" /></th>
+													<th style="width: 30%"><spring:message code="label.maestroTipoCaso.requiereFechaVencimiento" /></th>
 													<th style="width: 10%"><spring:message code="label.maestroActividad.accion" /></th>
 												</tr>
 											</thead>

@@ -24,6 +24,7 @@ function mostrarTablaActividad(){
 	tablaHtml += "<tr class='tr_titulo'>";
 	tablaHtml += "<th>Código</th>";
 	tablaHtml += "<th >Nombre</th>";
+	tablaHtml += "<th >Fecha vencimiento obligatoria</th>";
 	tablaHtml += "<th >Acción</th>";
 	// tablaHtml+="<th hidden='hidden'>&nbsp;</th>";
 	tablaHtml += "</tr>";
@@ -66,7 +67,15 @@ function mostrarTablaActividad(){
 			"mDataProp" : "codigoActividad",
 			"bSortable" : false,
 			"sWidth" : "30%"
-		}, {
+		},
+		 { "mData": "check",
+			"mDataProp" : "reqFechaVen",
+			"mRender": function ( data, type, full ) {
+				return "<input type=\"checkbox\" class=\"custom-control-input\" onchange=\"setValueCheck(this)\" "+(data=="S"?"checked":"")+" >";	
+			}
+		
+		 },
+		{
 			"mDataProp" : "nombreActividad",
 			"bSortable" : false,
 			"sWidth" : "30%"
@@ -168,6 +177,13 @@ function consultarActividad(codigo){
 					$("#codigoTareaActividad").val(optionData.cdtareaactividad);
 					$("#nombreTarea").val(optionData.dstarea);
 					$("#detalleTarea").val(optionData.dsdetalle);
+					
+					if(optionData.snObligatorioFechaVencimiento == "S"){
+						$("#chckFechaVencimientoObligatoria").prop("checked",true);
+					}else{
+						$("#chckFechaVencimientoObligatoria").prop("checked",false);
+					}
+
 					adicionarTarea();
 
 					// $("#adicionarTareaPrincipal").hide();
@@ -380,6 +396,7 @@ function doAjaxPostAdd(){
 					 data_actividad['tareaActividadList[' + i + '].dsdetalle'] =tareasArray[i].detalleTarea;
 					 data_actividad['tareaActividadList[' + i + '].isactivo'] ="S";
 					 data_actividad['tareaActividadList[' + i + '].dstarea'] =tareasArray[i].nombreTarea;
+					 data_actividad['tareaActividadList[' + i + '].snObligatorioFechaVencimiento'] =tareasArray[i].snFechaObligatoria;
 							 
 				}
 			}
@@ -562,22 +579,23 @@ function adicionarTarea(){
 	if($("#nuevasTareas").valid()){
 		$("#messageErrorModal").hide();
 		var rowid = "";
+		var chckFechaObl = $("#chckFechaVencimientoObligatoria").prop("checked");
+		var snFechaObligatoria = chckFechaObl ? "S" : "N";
+		var row = ['' + $("#nombreTarea").val(),
+			'' + $("#detalleTarea").val(),
+			 snFechaObligatoria,
+			'<a href="javascript:void(0);" onclick="deleteTarea('
+					+ filaTarea
+					+ ')"  title="Eliminar Tarea"><i class="glyphicon glyphicon-trash" style="color: red;"></i></a></a>'
+					+ '<a href="javascript:void(0);" onclick="editTarea(' + filaTarea
+					+ ')" title="Editar  Tarea" ><i class="glyphicon glyphicon-edit"></i></a>'];
+		
 		if($.fn.dataTable.isDataTable('#tablaTareas')){
-			rowid = $('table#tablaTareas')
-					.dataTable()
-					.fnAddData(
-							[
-									'' + $("#nombreTarea").val(),
-									'' + $("#detalleTarea").val(),
-									'<a href="javascript:void(0);" onclick="deleteTarea('
-											+ filaTarea
-											+ ')"  title="Eliminar Tarea"><i class="glyphicon glyphicon-trash" style="color: red;"></i></a></a>'
-											+ '<a href="javascript:void(0);" onclick="editTarea(' + filaTarea
-											+ ')" title="Editar  Tarea" ><i class="glyphicon glyphicon-edit"></i></a>']);
+			rowid = $('table#tablaTareas').dataTable()
+					.fnAddData(row);
 
 		}else{
-			rowid = $('table#tablaTareas')
-					.dataTable({
+			rowid = $('table#tablaTareas').dataTable({
 						"bProcessing" : false,
 						"bServerSide" : false,
 						"bFilter" : false,
@@ -585,15 +603,7 @@ function adicionarTarea(){
 						"bSortable" : false,
 						"bPaginate" : false
 					})
-					.fnAddData(
-							[
-									'' + $("#nombreTarea").val(),
-									'' + $("#detalleTarea").val(),
-									'<a href="javascript:void(0);" onclick="deleteTarea('
-											+ filaTarea
-											+ ')" title="Eliminar Tarea"><i class="glyphicon glyphicon-trash" style="color: red;"></i></a></a>'
-											+ '<a href="javascript:void(0);" onclick="editTarea(' + filaTarea
-											+ ')" title="Editar Tarea"><i class="glyphicon glyphicon-edit"></i></a>']);
+					.fnAddData(row);
 
 		}
 
@@ -602,13 +612,15 @@ function adicionarTarea(){
 
 		$('td', theNode)[0].setAttribute('class', 'nombreTarea');
 		$('td', theNode)[1].setAttribute('class', 'detalleTarea');
-		$('td', theNode)[2].setAttribute('class', 'accionTarea');
+		$('td', theNode)[2].setAttribute('class', 'fechaObligatoria');
+		$('td', theNode)[3].setAttribute('class', 'accionTarea');
 
 		elementoTarea = new Object();
 		elementoTarea.fila = filaTarea;
 		elementoTarea.codigoTarea = $("#codigoTareaActividad").val();
 		elementoTarea.nombreTarea = $("#nombreTarea").val();
 		elementoTarea.detalleTarea = $("#detalleTarea").val();
+		elementoTarea.snFechaObligatoria = snFechaObligatoria;
 
 		tareasArray[countTareas] = elementoTarea;
 
@@ -646,6 +658,11 @@ function editTarea(fila){
 					'<input id="detalleTareaEditado' + fila + '" name="detalleTareaEditado' + fila
 							+ '" type="text" class="form-control" required="required" value="'
 							+ tareasArray[i].detalleTarea + '"/>  ');
+			$("#f" + fila + " td.fechaObligatoria").html(
+					'<input id="chkFechaVencimientoObligatoriaEditado' + fila + '" name="chkFechaVencimientoObligatoriaEditado' + fila + "\""
+					+(tareasArray[i].snFechaObligatoria=="S"?" checked=true ":"")
+					+ '" type="checkbox" class="form-control" />  ');
+			
 
 			$("#f" + fila + " td.accionTarea").html(
 					'<a href="javascript:void(0);" onclick="cambiarTarea(' + fila + ',' + i
@@ -661,11 +678,13 @@ function cambiarTarea(fila, posicion){
 	elementoTarea.codigoTarea = $("#codigoTareaActividadEditado" + fila).val();
 	elementoTarea.nombreTarea = $("#nombreTareaEditado" + fila).val();
 	elementoTarea.detalleTarea = $("#detalleTareaEditado" + fila).val();
+	elementoTarea.snFechaObligatoria = $("#chkFechaVencimientoObligatoriaEditado" + fila).prop("checked")==true?"S":"N";
 
 	tareasArray[posicion] = elementoTarea;
 
 	$("#f" + fila + " td.nombreTarea").html($("#nombreTareaEditado" + fila).val());
 	$("#f" + fila + " td.detalleTarea").html($("#detalleTareaEditado" + fila).val());
+	$("#f" + fila + " td.fechaObligatoria").html(elementoTarea.snFechaObligatoria);
 	$("#f" + fila + " td.accionTarea")
 			.html(
 					'<a href="javascript:void(0);" onclick="deleteTarea('
@@ -795,6 +814,7 @@ function limpiarModalNuevaActividad(){
 	$("#nombreActividad").val("");
 	$("#messageExitosoModal").hide();
 	$("#messageErrorModal").hide();
+	
 	codigoActividad = -1;
 	var size = tareasArray.length;
 	for (var i = 0; i < size; i++){
@@ -822,6 +842,7 @@ function limpiarCamposTareas(){
 	$("#codigoTareaActividad").val("-1");
 	$("#detalleTarea").val("");
 	$("#nombreTarea").val("");
+	$("#chckFechaVencimientoObligatoria").prop("checked",false);
 }
 
 function limpiarMensajeError(){

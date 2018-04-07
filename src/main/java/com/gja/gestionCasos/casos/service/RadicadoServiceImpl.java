@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.gja.gestionCasos.casos.entities.Radicado;
+import com.gja.gestionCasos.casos.entities.RadicadoAcumulado;
 import com.gja.gestionCasos.casos.entities.RadicadoPK;
 import com.gja.gestionCasos.casos.repository.RadicadoRepository;
 import com.sf.util.BusinessException;
@@ -67,6 +68,7 @@ public class RadicadoServiceImpl implements RadicadoService{
 						existeRadicado.setInstancia(radicado.getInstancia());
 						existeRadicado.setFechaUltimaModificacion(new Date());
 						existeRadicado.setUsuarioUltimaModificacion(radicado.getUsuarioUltimaModificacion());
+						existeRadicado.setRadicadosAcumulados(radicado.getRadicadosAcumulados());
 						radicado = existeRadicado;						
 					} else{
 						if (existeRadicado.getRadicadoPK().getCodigoRadicado().equals(existeRadicado.getRadicadoPK().getCodigoRadicado())){
@@ -88,6 +90,13 @@ public class RadicadoServiceImpl implements RadicadoService{
 					} else {
 						radicado.setFechaCreacion(new Date());
 						radicado.setFechaUltimaModificacion(new Date());
+						if(radicado.getRadicadosAcumulados()!=null && radicado.getRadicadosAcumulados().size()>0) {
+							for(RadicadoAcumulado acumulado : radicado.getRadicadosAcumulados()) {
+								acumulado.setRadicado(radicado);
+								acumulado.getRadicadoPK().setRadicado(radicado);
+							}	
+						}
+						
 					}
 				}
 				radicado = radicadoRepository.guardarRadicado(radicado);
