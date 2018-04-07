@@ -21,8 +21,10 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+
 import org.apache.log4j.Logger;
-import org.apache.poi.hssf.record.MulRKRecord;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -232,6 +234,7 @@ public class FileUploadController {
 				
 				List<CasoEquipoCaso> listaIntegrantesEquipo = new ArrayList<CasoEquipoCaso>();
 				List<BienAfectado> listaBienAfectado = new ArrayList<BienAfectado>();
+				List<BienAfectado> listaReferenciador = new ArrayList<BienAfectado>();
 				List<Radicado> listaRadicado = new ArrayList<Radicado>();
 				List<ActividadCaso> listaTareaParticular = new ArrayList<ActividadCaso>();
 				BienAfectado objetoBienAfectado = new BienAfectado();
@@ -240,7 +243,7 @@ public class FileUploadController {
 				int k = 0;
 				String resumenInfo = "";
 				XSSFSheet sheet = wb.getSheetAt(0); // HOJA CONTROL PROCESOS GJA
-				XSSFSheet sheet2 = wb.getSheetAt(1);// HOJA INFORMACI�N ADICIONAL
+				//XSSFSheet sheet2 = wb.getSheetAt(1);// HOJA INFORMACIÓN ADICIONAL
 				
 				@SuppressWarnings("rawtypes")
 				Iterator iterator = sheet.rowIterator();
@@ -277,37 +280,56 @@ public class FileUploadController {
 					
 					caso.setCiudadProceso(lugarProceso.getCiudadProceso());
 					caso.setDireccionProceso(lugarProceso.getDireccionProceso());
-					XSSFRow rowAbogado = sheet2.getRow(10);
+					XSSFRow rowAbogado = sheet.getRow(27);
 					abogados = LlenarAbogados(rowAbogado, null);// ABOGADOS DEL CASO
 					
 					listaIntegrantesEquipo.addAll(abogados);
-
+					
+					/** RADICADOS */
+					bundle = getRadicados(caso, pContador, sheet, cdusuarioLogeado, listaRadicado);
+					caso = (Caso) bundle.get("caso");
+					pContador = (Integer) bundle.get("pContador");
+					bundle.clear();
+					
+					 
 					/** Grupo Familiar / Demandantes */
 					
-					bundle = getGrupoFamiliarDemandates(k, sheet2,
+					bundle = getGrupoFamiliarDemandates(k, sheet,
 							abogados, cdusuarioLogeado, casoGrupoFamiliar, listaIntegrantesEquipo, listaTareaParticular);
+					
 					
 					listaIntegrantesEquipo = (List<CasoEquipoCaso>) bundle.get("listaIntegrantesEquipo");
 					listaTareaParticular = (List<ActividadCaso>) bundle.get("listaTareaParticular");
 					k = (Integer) bundle.get("k");
 					bundle.clear();
 					
+					
 					/** Victimas */
-					bundle = getVictimas(k, sheet2, abogados, 
+					bundle = getVictimas(k, sheet, abogados, 
 							cdusuarioLogeado, listaIntegrantesEquipo, listaTareaParticular);
 					listaIntegrantesEquipo = (List<CasoEquipoCaso>) bundle.get("listaIntegrantesEquipo");
 					listaTareaParticular = (List<ActividadCaso>) bundle.get("listaTareaParticular");
 					k = (Integer) bundle.get("k");
 					bundle.clear();
 					
+					
 					/** Testigos */
-					bundle = getTestigos(k, contadorNotas, sheet2, caso, abogados, 
+					bundle = getTestigos(k, contadorNotas, sheet, caso, abogados, 
 							cdusuarioLogeado, listaIntegrantesEquipo);
 					caso = (Caso) bundle.get("caso");
 					k = (Integer) bundle.get("k");
 					listaIntegrantesEquipo = (List<CasoEquipoCaso>) bundle.get("listaIntegrantesEquipo");
 					bundle.clear();
-											
+
+					
+					/** Testigos */
+					bundle = getReferenciador(k, contadorNotas, sheet, caso, abogados, 
+							cdusuarioLogeado, listaIntegrantesEquipo);
+					caso = (Caso) bundle.get("caso");
+					k = (Integer) bundle.get("k");
+					listaIntegrantesEquipo = (List<CasoEquipoCaso>) bundle.get("listaIntegrantesEquipo");
+					bundle.clear();					
+					
 					/** Demandado */
 					bundle = getDemandados(pContador, listaIntegrantesEquipo, sheet);
 					pContador = (Integer) bundle.get("pContador");
@@ -321,10 +343,10 @@ public class FileUploadController {
 					bundle.clear();						
 					
 					/** RADICADOS */
-					bundle = getRadicados(caso, pContador, sheet, cdusuarioLogeado, listaRadicado);
-					caso = (Caso) bundle.get("caso");
-					pContador = (Integer) bundle.get("pContador");
-					bundle.clear();
+					//bundle = getRadicados(caso, pContador, sheet, cdusuarioLogeado, listaRadicado);
+					//caso = (Caso) bundle.get("caso");
+					//pContador = (Integer) bundle.get("pContador");
+					//bundle.clear();
 					
 					/** DESPACHO */
 					bundle = getDespacho(caso, sheet, listaIntegrantesEquipo);
@@ -335,6 +357,9 @@ public class FileUploadController {
 					bundle = getNotas(caso, resumenInfo, listaTareaParticular, res);
 					caso = (Caso) bundle.get("caso");
 					bundle.clear();
+
+			
+					
 					
 					res.put("casoCodigo", caso.getCodigo());
 					break;
@@ -342,21 +367,25 @@ public class FileUploadController {
 				res.put("STATUS", "SUCCESS");
 			}
 		} catch (IOException e) {
+			e.printStackTrace();
 			LOG.error("Error al tratar de realizar la carga de archivos para el documento: "
 					+ nombreArchivo + e.getMessage());
 			res.put("STATUS", "ERROR");
 			res.put("MENSAJE", infoError);
 		} catch (DAOException e) {
+			e.printStackTrace();
 			LOG.error("Error al tratar de realizar la carga de archivos para el documento: "
 					+ nombreArchivo + e.getMessage());
 			res.put("STATUS", "ERROR");
 			res.put("MENSAJE", infoError);
 		} catch (BusinessException e) {
+			e.printStackTrace();
 			LOG.error("Error al tratar de realizar la carga de archivos para el documento: "
 					+ nombreArchivo + e.getMessage());
 			res.put("STATUS", "ERROR");
 			res.put("MENSAJE", e.getMessage());
 		} catch (Exception e) {
+			e.printStackTrace();
 			LOG.error("Error al tratar de realizar la carga de archivos para el documento: "
 					+ nombreArchivo + e.getMessage());
 			res.put("STATUS", "ERROR");
@@ -368,7 +397,7 @@ public class FileUploadController {
 	/** Grupo Familiar / Demandantes 
 	 * @throws BusinessException 
 	 * @throws DAOException */
-	private HashMap<String, Object> getGrupoFamiliarDemandates(int k, XSSFSheet sheet2, 
+	private HashMap<String, Object> getGrupoFamiliarDemandates(int k, XSSFSheet sheet, 
 			List<CasoEquipoCaso> abogados,
 			String cdusuarioLogeado,
 			List<Object> casoGrupoFamiliar, 
@@ -377,23 +406,26 @@ public class FileUploadController {
 			) throws DAOException, BusinessException {
 		HashMap<String, Object> retorno = new HashMap<String, Object>();
 		
-		XSSFRow rowDemandados = sheet2.getRow(11);
+		XSSFRow rowDemandados = sheet.getRow(29+k);
+				
 		XSSFCell etiquetaTestigos = rowDemandados.getCell(0);
+		
 		String etiquetaInfoTestigo = etiquetaTestigos.getStringCellValue();
+		
 		celdasTareas = new HashMap<String, XSSFCell>();
 		celdasResponsables = new HashMap<String, XSSFCell>();
 		celdasVencimientos = new HashMap<String, XSSFCell>();
 		nombresTareas = new ArrayList<String>();
 		
 		while (!etiquetaInfoTestigo.equalsIgnoreCase("VICTIMA")) {
-			rowDemandados = sheet2.getRow(11 + k);
+			rowDemandados = sheet.getRow(29 + k);
 			etiquetaTestigos = rowDemandados.getCell(0);
+						
 			etiquetaInfoTestigo = etiquetaTestigos.getStringCellValue();
-
-			if (!etiquetaInfoTestigo.equalsIgnoreCase("VICTIMA")
-					&& !etiquetaInfoTestigo.equalsIgnoreCase("DEMANDANTES/GRUPO FAMILIAR")) {
-
-					casoGrupoFamiliar = LlenarFamiliares(rowDemandados, cdusuarioLogeado, abogados);
+			
+			if (!etiquetaInfoTestigo.equalsIgnoreCase("VICTIMA") && !etiquetaInfoTestigo.equalsIgnoreCase("DEMANDANTES/GRUPO FAMILIAR")) {
+				
+				casoGrupoFamiliar = LlenarFamiliares(rowDemandados, cdusuarioLogeado, abogados);
 
 				if (!casoGrupoFamiliar.isEmpty() && casoGrupoFamiliar != null) {
 					listaIntegrantesEquipo.add((CasoEquipoCaso) casoGrupoFamiliar.get(0));
@@ -411,25 +443,28 @@ public class FileUploadController {
 
 	/** Testigos 
 	 * @throws BusinessException */
-	private HashMap<String, Object> getTestigos(int k, int contadorNotas, XSSFSheet sheet2, Caso caso,
+	private HashMap<String, Object> getTestigos(int k, int contadorNotas, XSSFSheet sheet, Caso caso,
 			List<CasoEquipoCaso> abogados,
 			String cdusuarioLogeado, 
 			List<CasoEquipoCaso> listaIntegrantesEquipo
 			) throws BusinessException {
 		HashMap<String, Object> bundle = new HashMap<String, Object>();
-		XSSFRow rowTestigos = sheet2.getRow(11 + k);
+		
+		
+		XSSFRow rowTestigos = sheet.getRow(29 + k);
 		XSSFCell etiquetaVictima = rowTestigos.getCell(0);
 		String etiquetaInfoVictima = etiquetaVictima.getStringCellValue();
 		CasoEquipoCaso equipoCasoTestigpReturn = null;
 		
-		while (!etiquetaInfoVictima.equalsIgnoreCase("")) {
-			rowTestigos = sheet2.getRow(11 + k);
+		while (!etiquetaInfoVictima.equalsIgnoreCase("TESTIGOS") &&  !etiquetaInfoVictima.equalsIgnoreCase("REFERENCIADOR") && etiquetaInfoVictima != null) {
+			rowTestigos = sheet.getRow(29 + k);
 			etiquetaVictima = rowTestigos.getCell(0);
+			
 			if (etiquetaVictima != null) {				
 				etiquetaInfoVictima = etiquetaVictima.getStringCellValue();
 				if (!etiquetaInfoVictima.equalsIgnoreCase("")
 						&& !etiquetaInfoVictima.equalsIgnoreCase("NOMBRES COMPLETOS *")
-						&& !etiquetaInfoVictima.equalsIgnoreCase("TESTIGOS")) {
+						&& !etiquetaInfoVictima.equalsIgnoreCase("REFERENCIADOR")) {
 					equipoCasoTestigpReturn = LlenarTestigos(rowTestigos);
 					listaIntegrantesEquipo.add(equipoCasoTestigpReturn);
 				}
@@ -453,23 +488,28 @@ public class FileUploadController {
 	/** Victimas 
 	 * @throws BusinessException 
 	 * @throws DAOException */
-	private HashMap<String, Object> getVictimas(int k, XSSFSheet sheet2, 
+	private HashMap<String, Object> getVictimas(int k, XSSFSheet sheet, 
 			List<CasoEquipoCaso> abogados,
 			String cdusuarioLogeado, 
 			List<CasoEquipoCaso> listaIntegrantesEquipo,
 			List<ActividadCaso> listaTareaParticular
 			) throws BusinessException, DAOException{
 		HashMap<String, Object> bundle = new HashMap<String, Object>();
+		
 
-		XSSFRow rowVictimas = sheet2.getRow(k + 11);
+		//XSSFRow rowVictimas = sheet.getRow(33 + k);
+		XSSFRow rowVictimas = sheet.getRow(29 + k);
 		XSSFCell etiquetaDemandados = rowVictimas.getCell(0);
 		List<Object> casoGrupoFamiliar = new ArrayList<Object>();
-		String etiquetaInfoDemandados = etiquetaDemandados
-				.getStringCellValue();
+		String etiquetaInfoDemandados = etiquetaDemandados.getStringCellValue();
+		
 		CasoEquipoCaso equipoCasoVictimaReturn = null;
-		while (!etiquetaInfoDemandados.equalsIgnoreCase("TESTIGOS") && etiquetaDemandados != null) {
-			rowVictimas = sheet2.getRow(k + 11);
+		while (!etiquetaInfoDemandados.equalsIgnoreCase("TESTIGOS") && !etiquetaInfoDemandados.equalsIgnoreCase("VICTIMA") 
+				&& !etiquetaInfoDemandados.equalsIgnoreCase("REFERENCIADOR") && etiquetaDemandados != null ) {
+			rowVictimas = sheet.getRow(29+k);
 			etiquetaDemandados = rowVictimas.getCell(0);
+			
+			
 			if (etiquetaDemandados != null) {
 				etiquetaInfoDemandados = etiquetaDemandados.getStringCellValue();
 				if (!etiquetaInfoDemandados.equalsIgnoreCase("NOMBRES COMPLETOS *")
@@ -495,6 +535,53 @@ public class FileUploadController {
 		
 		return bundle;
 	}
+	
+	
+	private HashMap<String, Object> getReferenciador(int k, int contadorNotas, XSSFSheet sheet, Caso caso,
+			List<CasoEquipoCaso> abogados,
+			String cdusuarioLogeado, 
+			List<CasoEquipoCaso> listaIntegrantesEquipo
+			) throws BusinessException {
+		HashMap<String, Object> bundle = new HashMap<String, Object>();
+		
+		XSSFRow rowReferenciador = sheet.getRow(29 + k);
+		XSSFCell etiquetaReferenciador = rowReferenciador.getCell(0);
+		
+		String etiquetaInfoReferenciador = etiquetaReferenciador.getStringCellValue();
+		CasoEquipoCaso equipoCasoTestigpReturn = null;
+		
+		
+		while (etiquetaInfoReferenciador!=null) {
+			rowReferenciador = sheet.getRow(29 + k);
+			if(rowReferenciador.getCell(0)!=null){
+				etiquetaReferenciador = rowReferenciador.getCell(0);
+				if (etiquetaReferenciador != null) {				
+					etiquetaInfoReferenciador = etiquetaReferenciador.getStringCellValue();
+					if (!etiquetaInfoReferenciador.equalsIgnoreCase("VICTIMA") 
+							&& !etiquetaInfoReferenciador.equalsIgnoreCase("REFERENCIADOR") && !etiquetaInfoReferenciador.equalsIgnoreCase("")
+							&& !etiquetaInfoReferenciador.equalsIgnoreCase("NOMBRES COMPLETOS *")
+							&& !etiquetaInfoReferenciador.equalsIgnoreCase("TESTIGOS")) {
+						equipoCasoTestigpReturn = LlenarReferenciador(rowReferenciador);
+						listaIntegrantesEquipo.add(equipoCasoTestigpReturn);
+					}
+					if (contadorNotas == 0) {
+						XSSFCell infoComentario = rowReferenciador.getCell(12);
+						if (infoComentario != null) {
+							caso.setComentario(infoComentario.getStringCellValue());
+						}
+					}
+					contadorNotas++;
+				}
+				k++;
+			}else
+				break;
+		}
+		bundle.put("caso", caso);
+		bundle.put("listaIntegrantesEquipo", listaIntegrantesEquipo);
+		bundle.put("k", k);
+		
+		return bundle;
+	}	
 
 	/** Demandado 
 	 * @throws BusinessException */
@@ -534,7 +621,7 @@ public class FileUploadController {
 		XSSFCell etiquetaBienAfectado = rowBienAfectado.getCell(0);
 		String etiquetaRadicado = etiquetaBienAfectado.getStringCellValue();
 		
-		while (!etiquetaRadicado.equalsIgnoreCase("RADICADOS")) {
+		while (!etiquetaRadicado.equalsIgnoreCase("EQUIPO DEL CASO")) {
 			rowBienAfectado = sheet.getRow(15 + pContador);
 			etiquetaBienAfectado = rowBienAfectado.getCell(0);
 			etiquetaRadicado = etiquetaBienAfectado.getStringCellValue();
@@ -558,25 +645,30 @@ public class FileUploadController {
 		return bundle;
 	}
 	
+
+	
 	/** RADICADOS 
 	 * @throws BusinessException 
 	 * @throws DAOException */
-	private HashMap<String, Object> getRadicados(Caso caso, int pContador, XSSFSheet sheet, 
-			String cdusuarioLogeado, List<Radicado> listaRadicado) throws DAOException, BusinessException{
+	private HashMap<String, Object> getRadicados(Caso caso, int pContador, XSSFSheet sheet, String cdusuarioLogeado, List<Radicado> listaRadicado) 
+			throws DAOException, BusinessException{
+		
 		HashMap<String, Object> bundle = new HashMap<String, Object>();
-
+		
 		XSSFRow rowRadicado = sheet.getRow(15 + pContador);
+				
 		XSSFCell etiquetaVacia = rowRadicado.getCell(0);
 		String etiquetaVaciaString = etiquetaVacia.getStringCellValue();
 		Radicado objRadicado = new Radicado();
-		while (!etiquetaVaciaString.equalsIgnoreCase("")
-				&& rowRadicado != null
-				&& rowRadicado.getCell(0) != null) {
+		
+		while (!etiquetaVaciaString.equalsIgnoreCase("") && rowRadicado != null && rowRadicado.getCell(0) != null && !etiquetaVaciaString.equalsIgnoreCase("DEMANDADOS")) {
+						
 			rowRadicado = sheet.getRow(15 + pContador);
+			
 			if (rowRadicado != null && rowRadicado.getCell(0) != null) {
 				etiquetaVacia = rowRadicado.getCell(0);
 				etiquetaVaciaString = etiquetaVacia.getStringCellValue();
-				if (!etiquetaVaciaString.equalsIgnoreCase("") && !etiquetaVaciaString.equalsIgnoreCase("RADICADOS")) {// && !"RADICADOS".equalsIgnoreCase(etiquetaVaciaString)
+				if (!etiquetaVaciaString.equalsIgnoreCase("") && !etiquetaVaciaString.equalsIgnoreCase("RADICADOS")) {
 					objRadicado = LlenarRadicados(rowRadicado);
 					if (objRadicado != null && objRadicado.getInstancia() != null) {
 						objRadicado.setActivo(Parametros.getCodigoRadicadoActivoSi());
@@ -589,6 +681,7 @@ public class FileUploadController {
 			
 			pContador++;
 		}
+		
 		if (listaRadicado != null)
 			caso.setRadicadoSet(listaRadicado);
 		
@@ -597,6 +690,7 @@ public class FileUploadController {
 		
 		return bundle;
 	}
+	
 	
 	/** DESPACHO */
 	private HashMap<String, Object> getDespacho(Caso caso, XSSFSheet sheet, List<CasoEquipoCaso> listaIntegrantesEquipo){
@@ -675,6 +769,9 @@ public class FileUploadController {
 		
 		return bundle;
 	}
+	
+	
+	
 	
 	public Caso LlenarInformacionCaso(XSSFRow row) {
 		Caso caso = new Caso();
@@ -1003,7 +1100,7 @@ public class FileUploadController {
 			abogado = rowAbogado.getCell(0);
 		List<User> listaUser = null;
 		if (rowAbogado != null) {
-			XSSFCell fechaActividad = rowAbogado.getCell(33);
+			XSSFCell fechaActividad = rowAbogado.getCell(40);
 			if (rowAbogado != null && fechaActividad != null) {
 				fechaVencimientoActividadString = fechaActividad.getStringCellValue();
 			}
@@ -1188,22 +1285,22 @@ public class FileUploadController {
 			etiquetaInfoTestigo = etiquetaTestigos.getStringCellValue();
 		
  		if (etiquetaInfoTestigo.equalsIgnoreCase("NOMBRES COMPLETOS *")) {
-			celdasVencimientos.put("fechaVencimientoPoder", rowDemandados.getCell(17));
-			celdasVencimientos.put("fechaVencimientoPoderProcuraduria", rowDemandados.getCell(19));
-			celdasVencimientos.put("fechaVencimientoFotoCopia", rowDemandados.getCell(21));
-			celdasVencimientos.put("fechaVencimientoCMandato", rowDemandados.getCell(23));
-			celdasVencimientos.put("fechaVencimientoJuntaM", rowDemandados.getCell(25));
-			celdasVencimientos.put("fechaVencimientoCPTransito", rowDemandados.getCell(27));
-			celdasVencimientos.put("fechaVencimientoPreclusion", rowDemandados.getCell(29));
-			celdasVencimientos.put("fechaVencimientoBLibertad", rowDemandados.getCell(31));
-			celdasVencimientos.put("fechaVencimientoHClinica", rowDemandados.getCell(33));
-			celdasVencimientos.put("fechaVencimientoRHecho", rowDemandados.getCell(35));
-			celdasVencimientos.put("fechaVencimientoPBautismo", rowDemandados.getCell(37));
-			celdasVencimientos.put("fechaVencimientoPMatrimonio", rowDemandados.getCell(39));
-			celdasVencimientos.put("fechaVencimientoRMatrimonio", rowDemandados.getCell(41));
-			celdasVencimientos.put("fechaVencimientoRNacimiento", rowDemandados.getCell(43));
-			celdasVencimientos.put("fechaVencimientoRDefuncion", rowDemandados.getCell(45));
-			celdasVencimientos.put("fechaVencimientoOtro", rowDemandados.getCell(47));
+			celdasVencimientos.put("fechaVencimientoPoder", rowDemandados.getCell(24));
+			celdasVencimientos.put("fechaVencimientoPoderProcuraduria", rowDemandados.getCell(26));
+			celdasVencimientos.put("fechaVencimientoFotoCopia", rowDemandados.getCell(28));
+			celdasVencimientos.put("fechaVencimientoCMandato", rowDemandados.getCell(30));
+			celdasVencimientos.put("fechaVencimientoJuntaM", rowDemandados.getCell(32));
+			celdasVencimientos.put("fechaVencimientoCPTransito", rowDemandados.getCell(34));
+			celdasVencimientos.put("fechaVencimientoPreclusion", rowDemandados.getCell(36));
+			celdasVencimientos.put("fechaVencimientoBLibertad", rowDemandados.getCell(38));
+			celdasVencimientos.put("fechaVencimientoHClinica", rowDemandados.getCell(40));
+			celdasVencimientos.put("fechaVencimientoRHecho", rowDemandados.getCell(42));
+			celdasVencimientos.put("fechaVencimientoPBautismo", rowDemandados.getCell(44));
+			celdasVencimientos.put("fechaVencimientoPMatrimonio", rowDemandados.getCell(46));
+			celdasVencimientos.put("fechaVencimientoRMatrimonio", rowDemandados.getCell(48));
+			celdasVencimientos.put("fechaVencimientoRNacimiento", rowDemandados.getCell(50));
+			celdasVencimientos.put("fechaVencimientoRDefuncion", rowDemandados.getCell(52));
+			celdasVencimientos.put("fechaVencimientoOtro", rowDemandados.getCell(54));
 			// TO DO se debe validar si las fechas de vencimiento son obligatorias 
 			//validarVencimientosTareas(celdasVencimientos);
 			
@@ -1216,46 +1313,46 @@ public class FileUploadController {
 		 * Fn Bloque que asigna caso equipo caso
 		 * */
 		/** Documentos Requeridos */
-		celdasTareas.put("poder", rowDemandados.getCell(16));
-		celdasTareas.put("poderProcuraduria", rowDemandados.getCell(18));
-		celdasTareas.put("fotocopiaCC", rowDemandados.getCell(20));
-		celdasTareas.put("contratoMandato", rowDemandados.getCell(22));
-		celdasTareas.put("informativo_juntaMed", rowDemandados.getCell(24));
-		celdasTareas.put("copiaProcesoTr�nsito", rowDemandados.getCell(26));
-		celdasTareas.put("preclusionSentencia", rowDemandados.getCell(28));
-		celdasTareas.put("boletaLibertad", rowDemandados.getCell(30));
-		celdasTareas.put("historiaClinica", rowDemandados.getCell(32));
-		celdasTareas.put("relatoHechos", rowDemandados.getCell(34));
-		celdasTareas.put("partidaBautismo", rowDemandados.getCell(36));
-		celdasTareas.put("partidaMatrimonio", rowDemandados.getCell(38));
-		celdasTareas.put("registroMatrimonio", rowDemandados.getCell(40));
-		celdasTareas.put("registroCivilNacimiento", rowDemandados.getCell(42));
-		celdasTareas.put("registroCivilDefuncion", rowDemandados.getCell(44));
-		celdasTareas.put("otros", rowDemandados.getCell(46));
+		celdasTareas.put("poder", rowDemandados.getCell(23));//16
+		celdasTareas.put("poderProcuraduria", rowDemandados.getCell(25));
+		celdasTareas.put("fotocopiaCC", rowDemandados.getCell(27));
+		celdasTareas.put("contratoMandato", rowDemandados.getCell(29));
+		celdasTareas.put("informativo_juntaMed", rowDemandados.getCell(31));
+		celdasTareas.put("copiaProcesoTránsito", rowDemandados.getCell(33));
+		celdasTareas.put("preclusionSentencia", rowDemandados.getCell(35));
+		celdasTareas.put("boletaLibertad", rowDemandados.getCell(37));
+		celdasTareas.put("historiaClinica", rowDemandados.getCell(39));
+		celdasTareas.put("relatoHechos", rowDemandados.getCell(41));
+		celdasTareas.put("partidaBautismo", rowDemandados.getCell(43));
+		celdasTareas.put("partidaMatrimonio", rowDemandados.getCell(45));
+		celdasTareas.put("registroMatrimonio", rowDemandados.getCell(47));
+		celdasTareas.put("registroCivilNacimiento", rowDemandados.getCell(49));
+		celdasTareas.put("registroCivilDefuncion", rowDemandados.getCell(51));
+		celdasTareas.put("otros", rowDemandados.getCell(53));
 		if (rowDemandados != null) {
 			
-			if (etiquetaSw.getStringCellValue().equalsIgnoreCase("Esposo(a) Compa(a)")) {
-				celdasResponsables.put("responsablePoder", rowDemandados.getCell(17));
-				celdasResponsables.put("responsablePoderProcuraduria", rowDemandados.getCell(19));
-				celdasResponsables.put("responsableFotoCopia", rowDemandados.getCell(21));
-				celdasResponsables.put("responsableCMandato", rowDemandados.getCell(23));
-				celdasResponsables.put("responsableJuntaM", rowDemandados.getCell(25));
-				celdasResponsables.put("responsableCPTransito", rowDemandados.getCell(27));
-				celdasResponsables.put("responsablePreclusion", rowDemandados.getCell(29));
-				celdasResponsables.put("responsableBLibertad", rowDemandados.getCell(31));
-				celdasResponsables.put("responsableHClinica", rowDemandados.getCell(33));
-				celdasResponsables.put("responsableRHecho", rowDemandados.getCell(34));
-				celdasResponsables.put("responsablePBautismo", rowDemandados.getCell(37));
-				celdasResponsables.put("responsablePMatrimonio", rowDemandados.getCell(39));
-				celdasResponsables.put("responsableRMatrimonio", rowDemandados.getCell(41));
-				celdasResponsables.put("responsableRNacimiento", rowDemandados.getCell(43));
-				celdasResponsables.put("responsableRDefuncion", rowDemandados.getCell(45));
-				celdasResponsables.put("responsableOtro", rowDemandados.getCell(47));
+			if (etiquetaSw.getStringCellValue().equalsIgnoreCase("Esposo(a) Compañero(a)")) {
+				celdasResponsables.put("responsablePoder", rowDemandados.getCell(24));
+				celdasResponsables.put("responsablePoderProcuraduria", rowDemandados.getCell(26));
+				celdasResponsables.put("responsableFotoCopia", rowDemandados.getCell(28));
+				celdasResponsables.put("responsableCMandato", rowDemandados.getCell(30));
+				celdasResponsables.put("responsableJuntaM", rowDemandados.getCell(32));
+				celdasResponsables.put("responsableCPTransito", rowDemandados.getCell(34));
+				celdasResponsables.put("responsablePreclusion", rowDemandados.getCell(36));
+				celdasResponsables.put("responsableBLibertad", rowDemandados.getCell(38));
+				celdasResponsables.put("responsableHClinica", rowDemandados.getCell(40));
+				celdasResponsables.put("responsableRHecho", rowDemandados.getCell(42));
+				celdasResponsables.put("responsablePBautismo", rowDemandados.getCell(44));
+				celdasResponsables.put("responsablePMatrimonio", rowDemandados.getCell(46));
+				celdasResponsables.put("responsableRMatrimonio", rowDemandados.getCell(48));
+				celdasResponsables.put("responsableRNacimiento", rowDemandados.getCell(50));
+				celdasResponsables.put("responsableRDefuncion", rowDemandados.getCell(52));
+				celdasResponsables.put("responsableOtro", rowDemandados.getCell(54));
 				// TO DO se debe validar si los responsables son obligatorios 
 				//validarResponsablesTareas(celdasResponsables);
 			}
 		}
-		if (!etiquetaSw.getStringCellValue().equalsIgnoreCase("Esposo(a) Compa(a)")
+		if (!etiquetaSw.getStringCellValue().equalsIgnoreCase("Esposo(a) Compañero(a)")
 				&& !etiquetaInfoTestigo.equalsIgnoreCase("DEMANDANTES/GRUPO FAMILIAR")
 				&& !etiquetaInfoTestigo.equalsIgnoreCase("")
 				&& !etiquetaInfoTestigo.equalsIgnoreCase("NOMBRES COMPLETOS *")) {
@@ -1315,6 +1412,7 @@ public class FileUploadController {
 			List<String> responsablesTareas = new ArrayList<String>();
 			List<String> fechasVencimiento = new ArrayList<String>();
 			nombresTareas = new ArrayList<String>();
+			
 			
 			Map<String, XSSFCell> documentosRequeridos = getTareasPorParentesco(casoEquipoCaso.getParentesco().getCodigo());
 			
@@ -1585,7 +1683,7 @@ public class FileUploadController {
 				}
 				
 				if (parametrosDocumentos.getDocumentoProcesoTransito().equals(documento)) {
-					mapDocumentos.put("procesoTransito", celdasTareas.get("copiaProcesoTr�nsito"));
+					mapDocumentos.put("procesoTransito", celdasTareas.get("copiaProcesoTránsito"));
 					mapDocumentos.put("responsableCPTransito", celdasResponsables.get("responsableCPTransito"));
 					mapDocumentos.put("fechaVencimientoCPTransito", celdasVencimientos.get("fechaVencimientoCPTransito"));
 					nombresTareas.add(Parametros.getActividadTransito());
@@ -1677,6 +1775,7 @@ public class FileUploadController {
 	}
 	
 	private Map<String, XSSFCell> getTareasPorParentesco(Integer codigoParentesco) throws BusinessException {
+		
 		Map mapDocumentos = null;
 		if (parametrosDocumentos.getParentescoEsposo().equals(codigoParentesco.toString())) {
 			String documentosRequeridos[] = parametrosDocumentos.getDocumentosParentescoEsposo().split(",");
@@ -1708,6 +1807,48 @@ public class FileUploadController {
 			mapDocumentos = getMapTareasDocumentosRequeridos(documentosRequeridos);
 			return mapDocumentos;
 		}
+		
+		if (parametrosDocumentos.getParentescoNietos().equals(codigoParentesco.toString())) {
+			String documentosRequeridos[] = parametrosDocumentos.getDocumentosParentescoNietos().split(",");
+			mapDocumentos = getMapTareasDocumentosRequeridos(documentosRequeridos);
+			return mapDocumentos;
+		}
+		
+		if (parametrosDocumentos.getParentescoTios().equals(codigoParentesco.toString())) {
+			String documentosRequeridos[] = parametrosDocumentos.getDocumentosParentescoTio().split(",");
+			mapDocumentos = getMapTareasDocumentosRequeridos(documentosRequeridos);
+			return mapDocumentos;
+		}
+		
+		if (parametrosDocumentos.getParentescoSobrinos().equals(codigoParentesco.toString())) {
+			String documentosRequeridos[] = parametrosDocumentos.getDocumentosParentescoSobrinos().split(",");
+			mapDocumentos = getMapTareasDocumentosRequeridos(documentosRequeridos);
+			return mapDocumentos;
+		}
+		
+		if (parametrosDocumentos.getParentescoBisnietos().equals(codigoParentesco.toString())) {
+			String documentosRequeridos[] = parametrosDocumentos.getDocumentosParentescoBisnietos().split(",");
+			mapDocumentos = getMapTareasDocumentosRequeridos(documentosRequeridos);
+			return mapDocumentos;
+		}
+		
+		if (parametrosDocumentos.getParentescoPrimos().equals(codigoParentesco.toString())) {
+			String documentosRequeridos[] = parametrosDocumentos.getDocumentosParentescoPrimos().split(",");
+			mapDocumentos = getMapTareasDocumentosRequeridos(documentosRequeridos);
+			return mapDocumentos;
+		}		
+		
+		if (parametrosDocumentos.getParentescoDanmificados().equals(codigoParentesco.toString())) {
+			String documentosRequeridos[] = parametrosDocumentos.getDocumentosParentesco3danmificados().split(",");
+			mapDocumentos = getMapTareasDocumentosRequeridos(documentosRequeridos);
+			return mapDocumentos;
+		}		
+		
+		if (parametrosDocumentos.getParentescoBisabuelos().equals(codigoParentesco.toString())) {
+			String documentosRequeridos[] = parametrosDocumentos.getDocumentosParentescoBisabuelos().split(",");
+			mapDocumentos = getMapTareasDocumentosRequeridos(documentosRequeridos);
+			return mapDocumentos;
+		}		
 		
 		if (parametrosDocumentos.getParentescoOtro().equals(codigoParentesco.toString())) {
 			String documentosRequeridos[] = parametrosDocumentos.getDocumentosParentescoOtro().split(",");
@@ -1847,16 +1988,24 @@ public class FileUploadController {
 		CasoEquipoCaso casoEquipoCaso = new CasoEquipoCaso();
 		Parentesco parentesco = new Parentesco();
 		XSSFCell isContacto = rowDemandados.getCell(2);
-		/** Parentesco */
-		XSSFCell esposoCompa = rowDemandados.getCell(10);
-		XSSFCell hijo = rowDemandados.getCell(11);
-		XSSFCell madrePadre = rowDemandados.getCell(12);
-		XSSFCell hermano = rowDemandados.getCell(13);
-		XSSFCell abuelo = rowDemandados.getCell(14);
-		XSSFCell otro = rowDemandados.getCell(15);
 		
-		List<Parentesco> listaParentesco = null;
-
+		
+		/** Parentesco*/
+		
+		XSSFCell esposoCompanero = rowDemandados.getCell(10);
+		XSSFCell nieto = rowDemandados.getCell(11);
+		XSSFCell tios = rowDemandados.getCell(12);
+		XSSFCell sobrinos = rowDemandados.getCell(13);
+		XSSFCell bisnietos = rowDemandados.getCell(14);
+		XSSFCell primos = rowDemandados.getCell(15);
+		XSSFCell damnficados = rowDemandados.getCell(16);
+		XSSFCell bisabuelos = rowDemandados.getCell(17);
+		XSSFCell hijo = rowDemandados.getCell(18);
+		XSSFCell madrePadre = rowDemandados.getCell(19);
+		XSSFCell hermano = rowDemandados.getCell(20);
+		XSSFCell abuelo = rowDemandados.getCell(21);
+		XSSFCell otro = rowDemandados.getCell(22);
+		
 		if (isContacto != null) {
 			if (isContacto.getStringCellValue() != null) {
 				if (isContacto.getStringCellValue().equalsIgnoreCase(caracterMarca)) {
@@ -1867,7 +2016,7 @@ public class FileUploadController {
 			}
 		}
 		
-		if (esposoCompa.getStringCellValue().equalsIgnoreCase(caracterMarca)) {
+		if (esposoCompanero.getStringCellValue().equalsIgnoreCase(caracterMarca)) {
 			parentesco.setCodigo(Integer.parseInt(parametrosDocumentos.getParentescoEsposo()));
 			casoEquipoCaso.setParentesco(parentesco);
 		} else if (hijo.getStringCellValue().equalsIgnoreCase(caracterMarca)) {
@@ -1885,7 +2034,29 @@ public class FileUploadController {
 		} else if (otro.getStringCellValue().equalsIgnoreCase(caracterMarca)) {
 			parentesco.setCodigo(Integer.parseInt(parametrosDocumentos.getParentescoOtro()));
 			casoEquipoCaso.setParentesco(parentesco);
+		}else if (nieto.getStringCellValue().equalsIgnoreCase(caracterMarca)) {
+			parentesco.setCodigo(Integer.parseInt(parametrosDocumentos.getParentescoNietos()));
+			casoEquipoCaso.setParentesco(parentesco);
+		}else if (tios.getStringCellValue().equalsIgnoreCase(caracterMarca)) {
+			parentesco.setCodigo(Integer.parseInt(parametrosDocumentos.getParentescoTios()));
+			casoEquipoCaso.setParentesco(parentesco);
+		}else if (sobrinos.getStringCellValue().equalsIgnoreCase(caracterMarca)) {
+			parentesco.setCodigo(Integer.parseInt(parametrosDocumentos.getParentescoSobrinos()));
+			casoEquipoCaso.setParentesco(parentesco);
+		}else if (bisnietos.getStringCellValue().equalsIgnoreCase(caracterMarca)) {
+			parentesco.setCodigo(Integer.parseInt(parametrosDocumentos.getParentescoBisnietos()));
+			casoEquipoCaso.setParentesco(parentesco);
+		}else if (primos.getStringCellValue().equalsIgnoreCase(caracterMarca)) {
+			parentesco.setCodigo(Integer.parseInt(parametrosDocumentos.getParentescoPrimos()));
+			casoEquipoCaso.setParentesco(parentesco);
+		}else if (damnficados.getStringCellValue().equalsIgnoreCase(caracterMarca)) {
+			parentesco.setCodigo(Integer.parseInt(parametrosDocumentos.getParentescoDanmificados()));
+			casoEquipoCaso.setParentesco(parentesco);
+		}else if (bisabuelos.getStringCellValue().equalsIgnoreCase(caracterMarca)) {
+			parentesco.setCodigo(Integer.parseInt(parametrosDocumentos.getParentescoBisabuelos()));
+			casoEquipoCaso.setParentesco(parentesco);
 		}
+
 		return casoEquipoCaso;
 	}
 
@@ -1924,17 +2095,12 @@ public class FileUploadController {
 	 * 
 	 * @throws BusinessException
 	 */
-	public CasoEquipoCaso LlenarTestigos(XSSFRow rowTestigos)
-			throws BusinessException {
+	public CasoEquipoCaso LlenarTestigos(XSSFRow rowTestigos) throws BusinessException {
+		
 		TipoMiembro tipoMiembro = new TipoMiembro();
 		EquipoCaso equipoCaso = new EquipoCaso();
-		List<Correo> listaCorreo = new ArrayList<Correo>();
-		List<Telefono> listaTelefonos = new ArrayList<Telefono>();
-		List<Celular> listaCelulares = new ArrayList<Celular>();
 		CasoEquipoCaso casoEquipoCaso = new CasoEquipoCaso();
-		Telefono telefonoObjeto = new Telefono();
-		Correo correoObjeto = new Correo();
-		Celular celular = new Celular();
+		
 		SimpleDateFormat formatoFecha = new SimpleDateFormat("dd-MM-yyyy");
 		java.util.Date fecha = null;
 		XSSFCell nombreTestigo = rowTestigos.getCell(0);
@@ -1946,12 +2112,21 @@ public class FileUploadController {
 		XSSFCell celularTestigo = rowTestigos.getCell(7);
 		XSSFCell hotmailTestigo = rowTestigos.getCell(8);
 		XSSFCell direccionTestigo = rowTestigos.getCell(9);
-		XSSFCell esposoCompa = rowTestigos.getCell(10);
-		XSSFCell hijo = rowTestigos.getCell(11);
-		XSSFCell madrePadre = rowTestigos.getCell(12);
-		XSSFCell hermano = rowTestigos.getCell(13);
-		XSSFCell abuelo = rowTestigos.getCell(14);
-		XSSFCell otro = rowTestigos.getCell(15);
+		
+		XSSFCell esposoCompanero = rowTestigos.getCell(10);
+		XSSFCell nieto = rowTestigos.getCell(11);
+		XSSFCell tios = rowTestigos.getCell(12);
+		XSSFCell sobrinos = rowTestigos.getCell(13);
+		XSSFCell bisnietos = rowTestigos.getCell(14);
+		XSSFCell primos = rowTestigos.getCell(15);
+		XSSFCell damnficados = rowTestigos.getCell(16);
+		XSSFCell bisabuelos = rowTestigos.getCell(17);
+		XSSFCell hijo = rowTestigos.getCell(18);
+		XSSFCell madrePadre = rowTestigos.getCell(19);
+		XSSFCell hermano = rowTestigos.getCell(20);
+		XSSFCell abuelo = rowTestigos.getCell(21);
+		XSSFCell otro = rowTestigos.getCell(22);
+				
 		Parentesco parentesco = new Parentesco();
 		List<Parentesco> listaParentesco = null;
 		if (nombreTestigo != null) {
@@ -1976,70 +2151,11 @@ public class FileUploadController {
 				equipoCaso.setIdentificacion(cedulaTestigo.getStringCellValue());
 			}
 		}
+
 		obtenerTelefonosCeldas(telefonoTestigo, equipoCaso);
 		obtenerCelularesCeldas(celularTestigo, equipoCaso);
 		obtenerCorreosCeldas(hotmailTestigo, equipoCaso);
-//		try {
-//			if (telefonoTestigo.getNumericCellValue() > 0 && telefonoTestigo != null) {
-//				int datos = (int) telefonoTestigo.getNumericCellValue();
-//				telefonoObjeto.setNumero(Integer.toString(datos));
-//				listaTelefonos.add(telefonoObjeto);
-//
-//			} else if (telefonoTestigo.getNumericCellValue() == 0.0) {
-//				infoError = "Los campos marcados con (*) son requeridos.";
-//				throw new BusinessException("Los campos marcados con (*) son requeridos.");
-//			}
-//		} catch (Exception e) {
-//			if (telefonoTestigo.getStringCellValue() != null && telefonoTestigo != null) {
-//				if (telefonoTestigo.getStringCellValue().contains(";")) {
-//					String telefonos[] = telefonoTestigo.getStringCellValue().split(";");
-//					for (int i = 0; i < telefonos.length; i++) {
-//						telefonoObjeto.setNumero(telefonos[i]);
-//						listaTelefonos.add(telefonoObjeto);
-//					}
-//				} else {
-//					telefonoObjeto.setNumero(telefonoTestigo.getStringCellValue());
-//					listaTelefonos.add(telefonoObjeto);
-//				}
-//			}
-//		}
-//		if (!listaTelefonos.isEmpty())
-//			equipoCaso.setTelefonoList(listaTelefonos);
-//		try {
-//			if (celularTestigo.getNumericCellValue() > 0 && celularTestigo != null) {
-//				int datos = (int) celularTestigo.getNumericCellValue();
-//				celular.setNumero(Integer.toString(datos));
-//				listaCelulares.add(celular);
-//			}
-//		} catch (Exception e) {
-//			if (celularTestigo.getStringCellValue() != null && celularTestigo != null) {
-//				if (celularTestigo.getStringCellValue().contains(";")) {
-//					String celulares[] = celularTestigo.getStringCellValue().split(";");
-//					for (int i = 0; i < celulares.length; i++) {
-//						celular.setNumero(celulares[i]);
-//						listaCelulares.add(celular);
-//					}
-//				} else {
-//					celular.setNumero(celularTestigo.getStringCellValue());
-//					listaCelulares.add(celular);
-//				}
-//			}
-//		}
-//		if (!listaCelulares.isEmpty())
-//			equipoCaso.setCelularList(listaCelulares);
-//		if (hotmailTestigo.getStringCellValue() != null && hotmailTestigo != null) {
-//			if (hotmailTestigo.getStringCellValue().contains(";")) {
-//				String correos[] = hotmailTestigo.getStringCellValue().split(";");
-//				for (int i = 0; i < correos.length; i++) {
-//					correoObjeto.setCorreo(correos[i]);
-//					listaCorreo.add(correoObjeto);
-//				}
-//			} else {
-//				correoObjeto.setCorreo(hotmailTestigo.getStringCellValue());
-//				listaCorreo.add(correoObjeto);
-//			}		}
-//		if (!listaCorreo.isEmpty())
-//			equipoCaso.setCorreoList(listaCorreo);
+		
 		if (direccionTestigo.getStringCellValue() != null
 				&& direccionTestigo != null) {
 			casoEquipoCaso.setDireccion(direccionTestigo.getStringCellValue());
@@ -2069,7 +2185,7 @@ public class FileUploadController {
 			}
 		}
 		
-		if (esposoCompa.getStringCellValue().equalsIgnoreCase(caracterMarca) && esposoCompa != null) {
+		if (esposoCompanero.getStringCellValue().equalsIgnoreCase(caracterMarca) && esposoCompanero != null) {
 			try {
 				parentesco.setNombre(Parametros.getParentescoEsposo());
 				listaParentesco = parentescoService.obtenerCodigoParentesco(parentesco);
@@ -2148,6 +2264,416 @@ public class FileUploadController {
 				LOG.error("BusinessException: Ocurrio un error consultando los codigos del parentesco. El error es: "
 						+ e.getMessage());
 			}
+		} else if (sobrinos.getStringCellValue().equalsIgnoreCase(caracterMarca) && sobrinos != null) {
+			try {
+				parentesco.setNombre(Parametros.getParentescoPrimos());
+				listaParentesco = parentescoService.obtenerCodigoParentesco(parentesco);
+				for (Parentesco objParentesco : listaParentesco) {
+					casoEquipoCaso.setParentesco(objParentesco);
+				}
+			} catch (DAOException e) {
+				LOG.error("DAOException: Ocurrio un error consultando codigos del parentesco. El error es: "
+						+ e.getMessage());
+				infoError = "Verifique el tipo de parentesco seleccionado: "
+						+ Parametros.getParentescoSobrinos();
+			} catch (BusinessException e) {
+				LOG.error("BusinessException: Ocurrio un error consultando los codigos del parentesco. El error es: "
+						+ e.getMessage());
+			}
+		} else if (nieto.getStringCellValue().equalsIgnoreCase(caracterMarca) && nieto != null) {
+			try {
+				parentesco.setNombre(Parametros.getParentescoNieto());
+				listaParentesco = parentescoService.obtenerCodigoParentesco(parentesco);
+				for (Parentesco objParentesco : listaParentesco) {
+					casoEquipoCaso.setParentesco(objParentesco);
+				}
+			} catch (DAOException e) {
+				LOG.error("DAOException: Ocurrio un error consultando codigos del parentesco. El error es: "
+						+ e.getMessage());
+				infoError = "Verifique el tipo de parentesco seleccionado: "
+						+ Parametros.getParentescoNieto();
+			} catch (BusinessException e) {
+				LOG.error("BusinessException: Ocurrio un error consultando los codigos del parentesco. El error es: "
+						+ e.getMessage());
+			}
+		} else if (bisnietos.getStringCellValue().equalsIgnoreCase(caracterMarca) && bisnietos != null) {
+			try {
+				parentesco.setNombre(Parametros.getParentescoBisnietos());
+				listaParentesco = parentescoService.obtenerCodigoParentesco(parentesco);
+				for (Parentesco objParentesco : listaParentesco) {
+					casoEquipoCaso.setParentesco(objParentesco);
+				}
+			} catch (DAOException e) {
+				LOG.error("DAOException: Ocurrio un error consultando codigos del parentesco. El error es: "
+						+ e.getMessage());
+				infoError = "Verifique el tipo de parentesco seleccionado: "
+						+ Parametros.getParentescoBisnietos();
+			} catch (BusinessException e) {
+				LOG.error("BusinessException: Ocurrio un error consultando los codigos del parentesco. El error es: "
+						+ e.getMessage());
+			}
+		} else if (primos.getStringCellValue().equalsIgnoreCase(caracterMarca) && primos != null) {
+			try {
+				parentesco.setNombre(Parametros.getParentescoPrimos());
+				listaParentesco = parentescoService.obtenerCodigoParentesco(parentesco);
+				for (Parentesco objParentesco : listaParentesco) {
+					casoEquipoCaso.setParentesco(objParentesco);
+				}
+			} catch (DAOException e) {
+				LOG.error("DAOException: Ocurrio un error consultando codigos del parentesco. El error es: "
+						+ e.getMessage());
+				infoError = "Verifique el tipo de parentesco seleccionado: "
+						+ Parametros.getParentescoPrimos();
+			} catch (BusinessException e) {
+				LOG.error("BusinessException: Ocurrio un error consultando los codigos del parentesco. El error es: "
+						+ e.getMessage());
+			}
+		} else if (damnficados.getStringCellValue().equalsIgnoreCase(caracterMarca) && damnficados != null) {
+			try {
+				parentesco.setNombre(Parametros.getParentesco3rosDamnificados());
+				listaParentesco = parentescoService.obtenerCodigoParentesco(parentesco);
+				for (Parentesco objParentesco : listaParentesco) {
+					casoEquipoCaso.setParentesco(objParentesco);
+				}
+			} catch (DAOException e) {
+				LOG.error("DAOException: Ocurrio un error consultando codigos del parentesco. El error es: "
+						+ e.getMessage());
+				infoError = "Verifique el tipo de parentesco seleccionado: "
+						+ Parametros.getParentesco3rosDamnificados();
+			} catch (BusinessException e) {
+				LOG.error("BusinessException: Ocurrio un error consultando los codigos del parentesco. El error es: "
+						+ e.getMessage());
+			}
+		} else if (bisabuelos.getStringCellValue().equalsIgnoreCase(caracterMarca) && bisabuelos != null) {
+			try {
+				parentesco.setNombre(Parametros.getParentescoBisabuelos());
+				listaParentesco = parentescoService.obtenerCodigoParentesco(parentesco);
+				for (Parentesco objParentesco : listaParentesco) {
+					casoEquipoCaso.setParentesco(objParentesco);
+				}
+			} catch (DAOException e) {
+				LOG.error("DAOException: Ocurrio un error consultando codigos del parentesco. El error es: "
+						+ e.getMessage());
+				infoError = "Verifique el tipo de parentesco seleccionado: "
+						+ Parametros.getParentescoBisabuelos();
+			} catch (BusinessException e) {
+				LOG.error("BusinessException: Ocurrio un error consultando los codigos del parentesco. El error es: "
+						+ e.getMessage());
+			}	
+		} else if (otro.getStringCellValue().equalsIgnoreCase(caracterMarca) && otro != null) {
+			try {
+				parentesco.setNombre(Parametros.getParentescoOtro());
+				listaParentesco = parentescoService.obtenerCodigoParentesco(parentesco);
+				for (Parentesco objParentesco : listaParentesco) {
+					casoEquipoCaso.setParentesco(objParentesco);
+				}
+			} catch (DAOException e) {
+				LOG.error("DAOException: Ocurrio un error consultando codigos del parentesco. El error es: "
+						+ e.getMessage());
+				infoError = "Verifique el tipo de parentesco seleccionado: "
+						+ Parametros.getParentescoOtro();
+			} catch (BusinessException e) {
+				LOG.error("BusinessException: Ocurrio un error consultando los codigos del parentesco. El error es: "
+						+ e.getMessage());
+			}
+
+		}else if (tios.getStringCellValue().equalsIgnoreCase(caracterMarca) && tios != null) {
+			try {
+				parentesco.setNombre(Parametros.getParentescoTio());
+				listaParentesco = parentescoService.obtenerCodigoParentesco(parentesco);
+				for (Parentesco objParentesco : listaParentesco) {
+					casoEquipoCaso.setParentesco(objParentesco);
+				}
+			} catch (DAOException e) {
+				LOG.error("DAOException: Ocurrio un error consultando codigos del parentesco. El error es: "
+						+ e.getMessage());
+				infoError = "Verifique el tipo de parentesco seleccionado: "
+						+ Parametros.getParentescoOtro();
+			} catch (BusinessException e) {
+				LOG.error("BusinessException: Ocurrio un error consultando los codigos del parentesco. El error es: "
+						+ e.getMessage());
+			}
+
+		}
+		
+		
+
+		CasoEquipoCasoPK casoPk = new CasoEquipoCasoPK();
+		casoPk.setMiembro(Integer.parseInt(Parametros.getTestigo()));
+		casoEquipoCaso.setCasoEquipoCasoPK(casoPk);
+		tipoMiembro.setCodigo(Integer.parseInt(Parametros.getTestigo()));
+		casoEquipoCaso.setTipoMiembro(tipoMiembro);
+		casoEquipoCaso.setEquipoCaso(equipoCaso);
+		casoEquipoCaso.setActivo(Parametros.getContactoActivo());
+		
+		return casoEquipoCaso;
+	}
+	
+	
+	public CasoEquipoCaso LlenarReferenciador(XSSFRow rowReferenciador) throws BusinessException {
+		TipoMiembro tipoMiembro = new TipoMiembro();
+		EquipoCaso equipoCaso = new EquipoCaso();
+		CasoEquipoCaso casoEquipoCaso = new CasoEquipoCaso();
+		
+		SimpleDateFormat formatoFecha = new SimpleDateFormat("dd-MM-yyyy");
+		java.util.Date fecha = null;
+		XSSFCell nombreReferenciador = rowReferenciador.getCell(0);
+		XSSFCell apellidoReferenciador = rowReferenciador.getCell(1);
+		XSSFCell cedulaReferenciador = rowReferenciador.getCell(3);
+		XSSFCell tipoDocumentoReferenciador = rowReferenciador.getCell(4);
+		XSSFCell fechaNacimientoReferenciador = rowReferenciador.getCell(5);
+		XSSFCell telefonoReferenciador = rowReferenciador.getCell(6);
+		XSSFCell celularReferenciador = rowReferenciador.getCell(7);
+		XSSFCell hotmailReferenciador = rowReferenciador.getCell(8);
+		XSSFCell direccionReferenciador = rowReferenciador.getCell(9);
+		
+		XSSFCell sobrinos = rowReferenciador.getCell(10);
+		XSSFCell nietos = rowReferenciador.getCell(11);
+		XSSFCell bisnietos = rowReferenciador.getCell(13);
+		XSSFCell primos = rowReferenciador.getCell(14);
+		XSSFCell danmificados = rowReferenciador.getCell(15);
+		XSSFCell bisabuelos = rowReferenciador.getCell(16);
+		
+		XSSFCell esposoCompanero = rowReferenciador.getCell(17);
+		XSSFCell hijo = rowReferenciador.getCell(18);
+		XSSFCell madrePadre = rowReferenciador.getCell(19);
+		XSSFCell hermano = rowReferenciador.getCell(20);
+		XSSFCell abuelo = rowReferenciador.getCell(21);
+		XSSFCell otro = rowReferenciador.getCell(22);
+		Parentesco parentesco = new Parentesco();
+		List<Parentesco> listaParentesco = null;
+		if (nombreReferenciador != null) {
+			if (nombreReferenciador.getStringCellValue() != null) {
+				equipoCaso.setNombre(nombreReferenciador.getStringCellValue());
+			} else {
+				infoError = "Los campos marcados con (*) son requeridos.";
+			}
+		}
+		if (apellidoReferenciador.getStringCellValue() != null && apellidoReferenciador != null) {
+			equipoCaso.setApellido(apellidoReferenciador.getStringCellValue());
+		}
+		
+
+		try {
+			if (cedulaReferenciador.getNumericCellValue() > 0 && cedulaReferenciador != null) {
+				int datos = (int) cedulaReferenciador.getNumericCellValue();
+				equipoCaso.setIdentificacion(Integer.toString(datos));
+			}
+		} catch (Exception e) {
+			if (cedulaReferenciador.getStringCellValue() != null && cedulaReferenciador != null) {
+
+				equipoCaso.setIdentificacion(cedulaReferenciador.getStringCellValue());
+			}
+		}
+		
+		obtenerTelefonosCeldas(telefonoReferenciador, equipoCaso);
+		obtenerCelularesCeldas(celularReferenciador, equipoCaso);
+		obtenerCorreosCeldas(hotmailReferenciador, equipoCaso);
+		
+		if (direccionReferenciador.getStringCellValue() != null
+				&& direccionReferenciador != null) {
+			casoEquipoCaso.setDireccion(direccionReferenciador.getStringCellValue());
+		}
+		
+		if (tipoDocumentoReferenciador.getStringCellValue() != null) {
+			TipoDocumento tipoDocumento = new TipoDocumento();
+			tipoDocumento.setDocumento(tipoDocumentoReferenciador.getStringCellValue());
+			try {
+				tipoDocumento = tipoDocumentoService.obtenerCodigoTipoDocumento(tipoDocumento);
+			} catch (DAOException e) {
+				
+			}
+			equipoCaso.setTipoDocumento(tipoDocumento);
+		}
+		
+		if (!fechaNacimientoReferenciador.getStringCellValue().isEmpty() && fechaNacimientoReferenciador != null) {
+			try {
+				if (!fechaNacimientoReferenciador.getStringCellValue().equals("") && fechaNacimientoReferenciador.getStringCellValue() != null) {
+					fecha = formatoFecha.parse(fechaNacimientoReferenciador.getStringCellValue());
+					equipoCaso.setFechaNacimiento(fecha);
+				}
+			} catch (ParseException e) {
+				LOG.error("DAOException: Ocurrio un error convirtiendo la Fecha Inicio del caso. El error es: "
+						+ e.getMessage());
+				infoError = " Verifique la fecha de Inicio el formato no corresponde";
+			}
+		}
+		
+		if (esposoCompanero.getStringCellValue().equalsIgnoreCase(caracterMarca) && esposoCompanero != null) {
+			try {
+				parentesco.setNombre(Parametros.getParentescoEsposo());
+				listaParentesco = parentescoService.obtenerCodigoParentesco(parentesco);
+				for (Parentesco objParentesco : listaParentesco) {
+					casoEquipoCaso.setParentesco(objParentesco);
+				}
+			} catch (DAOException e) {
+				LOG.error("DAOException: Ocurrio un error consultando codigos del parentesco. El error es: "
+						+ e.getMessage());
+				infoError = "Verifique el tipo de parentesco seleccionado: "
+						+ Parametros.getParentescoEsposo();
+			} catch (BusinessException e) {
+				LOG.error("BusinessException: Ocurrio un error consultando los codigos del parentesco. El error es: "
+						+ e.getMessage());
+			}
+		} else if (hijo.getStringCellValue().equalsIgnoreCase(caracterMarca) && hijo != null) {
+			try {
+				parentesco.setNombre(Parametros.getParentescoHijo());
+				listaParentesco = parentescoService.obtenerCodigoParentesco(parentesco);
+				for (Parentesco objParentesco : listaParentesco) {
+					casoEquipoCaso.setParentesco(objParentesco);
+				}
+			} catch (DAOException e) {
+				LOG.error("DAOException: Ocurrio un error consultando codigos del parentesco. El error es: "
+						+ e.getMessage());
+				infoError = "Verifique el tipo de parentesco seleccionado: " + Parametros.getParentescoHijo();
+			} catch (BusinessException e) {
+				LOG.error("BusinessException: Ocurrio un error consultando los codigos del parentesco. El error es: "
+						+ e.getMessage());
+			}
+		} else if (madrePadre.getStringCellValue().equalsIgnoreCase(caracterMarca) && madrePadre != null) {
+			try {
+				parentesco.setNombre(Parametros.getParentescoMadre());
+				listaParentesco = parentescoService.obtenerCodigoParentesco(parentesco);
+				for (Parentesco objParentesco : listaParentesco) {
+					casoEquipoCaso.setParentesco(objParentesco);
+				}
+			} catch (DAOException e) {
+				LOG.error("DAOException: Ocurrio un error consultando codigos del parentesco. El error es: "
+						+ e.getMessage());
+				infoError = "Verifique el tipo de parentesco seleccionado: "
+						+ Parametros.getParentescoMadre();
+			} catch (BusinessException e) {
+				LOG.error("BusinessException: Ocurrio un error consultando los codigos del parentesco. El error es: "
+						+ e.getMessage());
+			}
+		} else if (hermano.getStringCellValue().equalsIgnoreCase(caracterMarca) && hermano != null) {
+			try {
+				parentesco.setNombre(Parametros.getParentescoHermano());
+				listaParentesco = parentescoService.obtenerCodigoParentesco(parentesco);
+				for (Parentesco objParentesco : listaParentesco) {
+					casoEquipoCaso.setParentesco(objParentesco);
+				}
+			} catch (DAOException e) {
+				LOG.error("DAOException: Ocurrio un error consultando codigos del parentesco. El error es: "
+						+ e.getMessage());
+				infoError = "Verifique el tipo de parentesco seleccionado: "
+						+ Parametros.getParentescoHermano();
+			} catch (BusinessException e) {
+				LOG.error("BusinessException: Ocurrio un error consultando los codigos del parentesco. El error es: "
+						+ e.getMessage());
+			}
+		} else if (abuelo.getStringCellValue().equalsIgnoreCase(caracterMarca) && abuelo != null) {
+			try {
+				parentesco.setNombre(Parametros.getParentescoAbuelo());
+				listaParentesco = parentescoService.obtenerCodigoParentesco(parentesco);
+				for (Parentesco objParentesco : listaParentesco) {
+					casoEquipoCaso.setParentesco(objParentesco);
+				}
+			} catch (DAOException e) {
+				LOG.error("DAOException: Ocurrio un error consultando codigos del parentesco. El error es: "
+						+ e.getMessage());
+				infoError = "Verifique el tipo de parentesco seleccionado: "
+						+ Parametros.getParentescoAbuelo();
+			} catch (BusinessException e) {
+				LOG.error("BusinessException: Ocurrio un error consultando los codigos del parentesco. El error es: "
+						+ e.getMessage());
+			}
+		} else if (sobrinos.getStringCellValue().equalsIgnoreCase(caracterMarca) && sobrinos != null) {
+			try {
+				parentesco.setNombre(Parametros.getParentescoPrimos());
+				listaParentesco = parentescoService.obtenerCodigoParentesco(parentesco);
+				for (Parentesco objParentesco : listaParentesco) {
+					casoEquipoCaso.setParentesco(objParentesco);
+				}
+			} catch (DAOException e) {
+				LOG.error("DAOException: Ocurrio un error consultando codigos del parentesco. El error es: "
+						+ e.getMessage());
+				infoError = "Verifique el tipo de parentesco seleccionado: "
+						+ Parametros.getParentescoSobrinos();
+			} catch (BusinessException e) {
+				LOG.error("BusinessException: Ocurrio un error consultando los codigos del parentesco. El error es: "
+						+ e.getMessage());
+			}
+		} else if (nietos.getStringCellValue().equalsIgnoreCase(caracterMarca) && nietos != null) {
+			try {
+				parentesco.setNombre(Parametros.getParentescoNieto());
+				listaParentesco = parentescoService.obtenerCodigoParentesco(parentesco);
+				for (Parentesco objParentesco : listaParentesco) {
+					casoEquipoCaso.setParentesco(objParentesco);
+				}
+			} catch (DAOException e) {
+				LOG.error("DAOException: Ocurrio un error consultando codigos del parentesco. El error es: "
+						+ e.getMessage());
+				infoError = "Verifique el tipo de parentesco seleccionado: "
+						+ Parametros.getParentescoNieto();
+			} catch (BusinessException e) {
+				LOG.error("BusinessException: Ocurrio un error consultando los codigos del parentesco. El error es: "
+						+ e.getMessage());
+			}
+		} else if (bisnietos.getStringCellValue().equalsIgnoreCase(caracterMarca) && bisnietos != null) {
+			try {
+				parentesco.setNombre(Parametros.getParentescoBisnietos());
+				listaParentesco = parentescoService.obtenerCodigoParentesco(parentesco);
+				for (Parentesco objParentesco : listaParentesco) {
+					casoEquipoCaso.setParentesco(objParentesco);
+				}
+			} catch (DAOException e) {
+				LOG.error("DAOException: Ocurrio un error consultando codigos del parentesco. El error es: "
+						+ e.getMessage());
+				infoError = "Verifique el tipo de parentesco seleccionado: "
+						+ Parametros.getParentescoBisnietos();
+			} catch (BusinessException e) {
+				LOG.error("BusinessException: Ocurrio un error consultando los codigos del parentesco. El error es: "
+						+ e.getMessage());
+			}
+		} else if (primos.getStringCellValue().equalsIgnoreCase(caracterMarca) && primos != null) {
+			try {
+				parentesco.setNombre(Parametros.getParentescoPrimos());
+				listaParentesco = parentescoService.obtenerCodigoParentesco(parentesco);
+				for (Parentesco objParentesco : listaParentesco) {
+					casoEquipoCaso.setParentesco(objParentesco);
+				}
+			} catch (DAOException e) {
+				LOG.error("DAOException: Ocurrio un error consultando codigos del parentesco. El error es: "
+						+ e.getMessage());
+				infoError = "Verifique el tipo de parentesco seleccionado: "
+						+ Parametros.getParentescoPrimos();
+			} catch (BusinessException e) {
+				LOG.error("BusinessException: Ocurrio un error consultando los codigos del parentesco. El error es: "
+						+ e.getMessage());
+			}
+		} else if (danmificados.getStringCellValue().equalsIgnoreCase(caracterMarca) && danmificados != null) {
+			try {
+				parentesco.setNombre(Parametros.getParentesco3rosDamnificados());
+				listaParentesco = parentescoService.obtenerCodigoParentesco(parentesco);
+				for (Parentesco objParentesco : listaParentesco) {
+					casoEquipoCaso.setParentesco(objParentesco);
+				}
+			} catch (DAOException e) {
+				LOG.error("DAOException: Ocurrio un error consultando codigos del parentesco. El error es: "
+						+ e.getMessage());
+				infoError = "Verifique el tipo de parentesco seleccionado: "
+						+ Parametros.getParentesco3rosDamnificados();
+			} catch (BusinessException e) {
+				LOG.error("BusinessException: Ocurrio un error consultando los codigos del parentesco. El error es: "
+						+ e.getMessage());
+			}
+		} else if (bisabuelos.getStringCellValue().equalsIgnoreCase(caracterMarca) && bisabuelos != null) {
+			try {
+				parentesco.setNombre(Parametros.getParentescoBisabuelos());
+				listaParentesco = parentescoService.obtenerCodigoParentesco(parentesco);
+				for (Parentesco objParentesco : listaParentesco) {
+					casoEquipoCaso.setParentesco(objParentesco);
+				}
+			} catch (DAOException e) {
+				LOG.error("DAOException: Ocurrio un error consultando codigos del parentesco. El error es: "
+						+ e.getMessage());
+				infoError = "Verifique el tipo de parentesco seleccionado: "
+						+ Parametros.getParentescoBisabuelos();
+			} catch (BusinessException e) {
+				LOG.error("BusinessException: Ocurrio un error consultando los codigos del parentesco. El error es: "
+						+ e.getMessage());
+			}			
 		} else if (otro.getStringCellValue().equalsIgnoreCase(caracterMarca) && otro != null) {
 			try {
 				parentesco.setNombre(Parametros.getParentescoOtro());
@@ -2168,34 +2694,29 @@ public class FileUploadController {
 		}
 
 		CasoEquipoCasoPK casoPk = new CasoEquipoCasoPK();
-		casoPk.setMiembro(Integer.parseInt(Parametros.getTestigo()));
+		casoPk.setMiembro(Integer.parseInt(Parametros.getReferenciador()));
 		casoEquipoCaso.setCasoEquipoCasoPK(casoPk);
-		tipoMiembro.setCodigo(Integer.parseInt(Parametros.getTestigo()));
+		tipoMiembro.setCodigo(Integer.parseInt(Parametros.getReferenciador()));
 		casoEquipoCaso.setTipoMiembro(tipoMiembro);
 		casoEquipoCaso.setEquipoCaso(equipoCaso);
 		casoEquipoCaso.setActivo(Parametros.getContactoActivo());
 		
 		return casoEquipoCaso;
-	}
+	}	
 
 	/**
 	 * METODO PARA LEER LA INFORMACION DE LAS VICTIMAS DEL CASO
 	 * 
 	 * @throws BusinessException
 	 */
-	public CasoEquipoCaso LlenarVictimas(XSSFRow rowVictimas)
-			throws BusinessException {
+	public CasoEquipoCaso LlenarVictimas(XSSFRow rowVictimas) throws BusinessException {
+		
 		TipoMiembro tipoMiembro = new TipoMiembro();
 		EquipoCaso equipoCaso = new EquipoCaso();
-		List<Correo> listaCorreo = new ArrayList<Correo>();
-		List<Telefono> listaTelefonos = new ArrayList<Telefono>();
-		List<Celular> listaCelulares = new ArrayList<Celular>();
 		CasoEquipoCaso casoEquipoCaso = new CasoEquipoCaso();
-		Telefono telefonoObjeto = new Telefono();
-		Correo correoObjeto = new Correo();
-		Celular celular = new Celular();
 		SimpleDateFormat formatoFecha = new SimpleDateFormat("dd-MM-yyyy");
 		java.util.Date fecha = null;
+		
 		XSSFCell nombreVictima = rowVictimas.getCell(0);
 		XSSFCell apellidoVictima = rowVictimas.getCell(1);
 		XSSFCell cedulaVictima = rowVictimas.getCell(3);
@@ -2205,12 +2726,22 @@ public class FileUploadController {
 		XSSFCell celularVictima = rowVictimas.getCell(7);
 		XSSFCell hotmailVictima = rowVictimas.getCell(8);
 		XSSFCell direccionVictima = rowVictimas.getCell(9);
-		XSSFCell esposoCompa = rowVictimas.getCell(10);
-		XSSFCell hijo = rowVictimas.getCell(11);
-		XSSFCell madrePadre = rowVictimas.getCell(12);
-		XSSFCell hermano = rowVictimas.getCell(13);
-		XSSFCell abuelo = rowVictimas.getCell(14);
-		XSSFCell otro = rowVictimas.getCell(15);
+		
+		XSSFCell sobrinos = rowVictimas.getCell(10);
+		XSSFCell nietos = rowVictimas.getCell(11);
+		XSSFCell bisnietos = rowVictimas.getCell(13);
+		XSSFCell primos = rowVictimas.getCell(14);
+		XSSFCell danmificados = rowVictimas.getCell(15);
+		XSSFCell bisabuelos = rowVictimas.getCell(16);
+		
+		XSSFCell esposoCompanero = rowVictimas.getCell(17);
+		XSSFCell hijo = rowVictimas.getCell(18);
+		XSSFCell madrePadre = rowVictimas.getCell(19);
+		XSSFCell hermano = rowVictimas.getCell(20);
+		XSSFCell abuelo = rowVictimas.getCell(21);
+		XSSFCell otro = rowVictimas.getCell(22);
+		
+		
 		Parentesco parentesco = new Parentesco();
 		List<Parentesco> listaParentesco = null;
 		if (nombreVictima != null) {
@@ -2236,73 +2767,7 @@ public class FileUploadController {
 		obtenerCelularesCeldas(celularVictima, equipoCaso);
 		obtenerCorreosCeldas(hotmailVictima, equipoCaso);
 
-//		try {
-//			if (telefonoVictima.getNumericCellValue() > 0 && telefonoVictima != null) {
-//				int datos = (int) telefonoVictima.getNumericCellValue();
-//				telefonoObjeto.setNumero(Integer.toString(datos));
-//				listaTelefonos.add(telefonoObjeto);
-//			} else if (telefonoVictima.getNumericCellValue() == 0.0) {
-//				infoError = "Los campos marcados con (*) son requeridos.";
-//				throw new BusinessException(
-//						"Los campos marcados con (*) son requeridos.");
-//			}
-//		} catch (Exception e) {
-//			if (telefonoVictima.getStringCellValue() != null && telefonoVictima != null) {
-//				if (telefonoVictima.getStringCellValue().contains(";")) {
-//					String telefonos[] = telefonoVictima.getStringCellValue().split(";");
-//					for (int i = 0; i < telefonos.length; i++) {
-//						telefonoObjeto.setNumero(telefonos[i]);
-//						listaTelefonos.add(telefonoObjeto);
-//					}
-//				} else {
-//					telefonoObjeto.setNumero(telefonoVictima.getStringCellValue());
-//					listaTelefonos.add(telefonoObjeto);
-//				}
-//			}
-//		}
-//		if (!listaTelefonos.isEmpty())
-//			equipoCaso.setTelefonoList(listaTelefonos);
-//
-//		try {
-//			if (celularVictima.getNumericCellValue() > 0 && celularVictima != null) {
-//				int datos = (int) celularVictima.getNumericCellValue();
-//				celular.setNumero(Integer.toString(datos));
-//				listaCelulares.add(celular);
-//			}
-//		} catch (Exception e) {
-//			if (celularVictima.getStringCellValue() != null && celularVictima != null) {
-//				if (celularVictima.getStringCellValue().contains(";")) {
-//					String celulares[] = celularVictima.getStringCellValue().split(";");
-//					for (int i = 0; i < celulares.length; i++) {
-//						celular.setNumero(celulares[i]);
-//						listaCelulares.add(celular);
-//					}
-//				} else {
-//					celular.setNumero(celularVictima.getStringCellValue());
-//					listaCelulares.add(celular);
-//				}
-//			}
-//		}
-//		if (!listaCelulares.isEmpty())
-//			equipoCaso.setCelularList(listaCelulares);
-//
-//		if (hotmailVictima.getStringCellValue() != null && hotmailVictima != null) {
-//			if (hotmailVictima.getStringCellValue().contains(";")) {
-//				String correos[] = hotmailVictima.getStringCellValue().split(";");
-//				for (int i = 0; i < correos.length; i++) {
-//					correoObjeto.setCorreo(correos[i]);
-//					listaCorreo.add(correoObjeto);
-//				}
-//			} else {
-//				correoObjeto.setCorreo(hotmailVictima.getStringCellValue());
-//				listaCorreo.add(correoObjeto);
-//			}
-//		}
-//
-//		if (!listaCorreo.isEmpty())
-//			equipoCaso.setCorreoList(listaCorreo);
-
-		if (esposoCompa.getStringCellValue().equalsIgnoreCase(caracterMarca) && esposoCompa != null) {
+		if (esposoCompanero.getStringCellValue().equalsIgnoreCase(caracterMarca) && esposoCompanero != null) {
 			try {
 				parentesco.setNombre(Parametros.getParentescoEsposo());
 				listaParentesco = parentescoService.obtenerCodigoParentesco(parentesco);
@@ -2385,7 +2850,102 @@ public class FileUploadController {
 				LOG.error("BusinessException: Ocurrio un error consultando los codigos del parentesco. El error es: "
 						+ e.getMessage());
 			}
-
+		} else if (sobrinos.getStringCellValue().equalsIgnoreCase(caracterMarca) && sobrinos != null) {
+			try {
+				parentesco.setNombre(Parametros.getParentescoPrimos());
+				listaParentesco = parentescoService.obtenerCodigoParentesco(parentesco);
+				for (Parentesco objParentesco : listaParentesco) {
+					casoEquipoCaso.setParentesco(objParentesco);
+				}
+			} catch (DAOException e) {
+				LOG.error("DAOException: Ocurrio un error consultando codigos del parentesco. El error es: "
+						+ e.getMessage());
+				infoError = "Verifique el tipo de parentesco seleccionado: "
+						+ Parametros.getParentescoSobrinos();
+			} catch (BusinessException e) {
+				LOG.error("BusinessException: Ocurrio un error consultando los codigos del parentesco. El error es: "
+						+ e.getMessage());
+			}
+		} else if (nietos.getStringCellValue().equalsIgnoreCase(caracterMarca) && nietos != null) {
+			try {
+				parentesco.setNombre(Parametros.getParentescoNieto());
+				listaParentesco = parentescoService.obtenerCodigoParentesco(parentesco);
+				for (Parentesco objParentesco : listaParentesco) {
+					casoEquipoCaso.setParentesco(objParentesco);
+				}
+			} catch (DAOException e) {
+				LOG.error("DAOException: Ocurrio un error consultando codigos del parentesco. El error es: "
+						+ e.getMessage());
+				infoError = "Verifique el tipo de parentesco seleccionado: "
+						+ Parametros.getParentescoNieto();
+			} catch (BusinessException e) {
+				LOG.error("BusinessException: Ocurrio un error consultando los codigos del parentesco. El error es: "
+						+ e.getMessage());
+			}
+		} else if (bisnietos.getStringCellValue().equalsIgnoreCase(caracterMarca) && bisnietos != null) {
+			try {
+				parentesco.setNombre(Parametros.getParentescoBisnietos());
+				listaParentesco = parentescoService.obtenerCodigoParentesco(parentesco);
+				for (Parentesco objParentesco : listaParentesco) {
+					casoEquipoCaso.setParentesco(objParentesco);
+				}
+			} catch (DAOException e) {
+				LOG.error("DAOException: Ocurrio un error consultando codigos del parentesco. El error es: "
+						+ e.getMessage());
+				infoError = "Verifique el tipo de parentesco seleccionado: "
+						+ Parametros.getParentescoBisnietos();
+			} catch (BusinessException e) {
+				LOG.error("BusinessException: Ocurrio un error consultando los codigos del parentesco. El error es: "
+						+ e.getMessage());
+			}
+		} else if (primos.getStringCellValue().equalsIgnoreCase(caracterMarca) && primos != null) {
+			try {
+				parentesco.setNombre(Parametros.getParentescoPrimos());
+				listaParentesco = parentescoService.obtenerCodigoParentesco(parentesco);
+				for (Parentesco objParentesco : listaParentesco) {
+					casoEquipoCaso.setParentesco(objParentesco);
+				}
+			} catch (DAOException e) {
+				LOG.error("DAOException: Ocurrio un error consultando codigos del parentesco. El error es: "
+						+ e.getMessage());
+				infoError = "Verifique el tipo de parentesco seleccionado: "
+						+ Parametros.getParentescoPrimos();
+			} catch (BusinessException e) {
+				LOG.error("BusinessException: Ocurrio un error consultando los codigos del parentesco. El error es: "
+						+ e.getMessage());
+			}
+		} else if (danmificados.getStringCellValue().equalsIgnoreCase(caracterMarca) && danmificados != null) {
+			try {
+				parentesco.setNombre(Parametros.getParentesco3rosDamnificados());
+				listaParentesco = parentescoService.obtenerCodigoParentesco(parentesco);
+				for (Parentesco objParentesco : listaParentesco) {
+					casoEquipoCaso.setParentesco(objParentesco);
+				}
+			} catch (DAOException e) {
+				LOG.error("DAOException: Ocurrio un error consultando codigos del parentesco. El error es: "
+						+ e.getMessage());
+				infoError = "Verifique el tipo de parentesco seleccionado: "
+						+ Parametros.getParentesco3rosDamnificados();
+			} catch (BusinessException e) {
+				LOG.error("BusinessException: Ocurrio un error consultando los codigos del parentesco. El error es: "
+						+ e.getMessage());
+			}
+		} else if (bisabuelos.getStringCellValue().equalsIgnoreCase(caracterMarca) && bisabuelos != null) {
+			try {
+				parentesco.setNombre(Parametros.getParentescoBisabuelos());
+				listaParentesco = parentescoService.obtenerCodigoParentesco(parentesco);
+				for (Parentesco objParentesco : listaParentesco) {
+					casoEquipoCaso.setParentesco(objParentesco);
+				}
+			} catch (DAOException e) {
+				LOG.error("DAOException: Ocurrio un error consultando codigos del parentesco. El error es: "
+						+ e.getMessage());
+				infoError = "Verifique el tipo de parentesco seleccionado: "
+						+ Parametros.getParentescoBisabuelos();
+			} catch (BusinessException e) {
+				LOG.error("BusinessException: Ocurrio un error consultando los codigos del parentesco. El error es: "
+						+ e.getMessage());
+			}	
 		} else if (otro.getStringCellValue().equalsIgnoreCase(caracterMarca) && otro != null) {
 			try {
 				parentesco.setNombre(Parametros.getParentescoOtro());
@@ -2503,69 +3063,6 @@ public class FileUploadController {
 		obtenerCelularesCeldas(celularDemandado, equipoCaso);
 		obtenerCorreosCeldas(hotmailDemandado, equipoCaso);
 		
-//		try {
-//			if (telefonoDemandado.getNumericCellValue() > 0 && telefonoDemandado != null) {
-//				int datos = (int) telefonoDemandado.getNumericCellValue();
-//				telefonoObjeto.setNumero(Integer.toString(datos));
-//				listaTelefonos.add(telefonoObjeto);
-//			}
-//		} catch (Exception e) {
-//			if (telefonoDemandado.getStringCellValue() != null && telefonoDemandado != null) {
-//				if (telefonoDemandado.getStringCellValue().contains(";")) {
-//					String telefonos[] = telefonoDemandado.getStringCellValue().split(";");
-//					for (int i = 0; i < telefonos.length; i++) {
-//						telefonoObjeto.setNumero(telefonos[i]);
-//						listaTelefonos.add(telefonoObjeto);
-//					}
-//
-//				} else {
-//					telefonoObjeto.setNumero(telefonoDemandado.getStringCellValue());
-//					listaTelefonos.add(telefonoObjeto);
-//				}
-//			}
-//		}
-//		if (!listaTelefonos.isEmpty())
-//			equipoCaso.setTelefonoList(listaTelefonos);
-//
-//		try {
-//			if (celularDemandado.getNumericCellValue() > 0 && celularDemandado != null) {
-//				int datos = (int) celularDemandado.getNumericCellValue();
-//				celular.setNumero(Integer.toString(datos));
-//				listaCelulares.add(celular);
-//			}
-//		} catch (Exception e) {
-//			if (celularDemandado != null) {
-//				if (celularDemandado.getStringCellValue().contains(";")) {
-//					String celulares[] = celularDemandado.getStringCellValue().split(";");
-//					for (int i = 0; i < celulares.length; i++) {
-//						celular.setNumero(celulares[i]);
-//						listaCelulares.add(celular);
-//					}
-//
-//				} else {
-//					celular.setNumero(celularDemandado.getStringCellValue());
-//					listaCelulares.add(celular);
-//				}
-//			}
-//		}
-//		if (!listaCelulares.isEmpty())
-//			equipoCaso.setCelularList(listaCelulares);
-//
-//		if (hotmailDemandado != null) {
-//			if (hotmailDemandado.getStringCellValue().contains(";")) {
-//				String correos[] = hotmailDemandado.getStringCellValue().split(";");
-//				for (int i = 0; i < correos.length; i++) {
-//					correoObjeto.setCorreo(correos[i]);
-//					listaCorreo.add(correoObjeto);
-//				}
-//			} else {
-//				correoObjeto.setCorreo(hotmailDemandado.getStringCellValue());
-//				listaCorreo.add(correoObjeto);
-//			}
-//		}
-//
-//		if (!listaCorreo.isEmpty())
-//			equipoCaso.setCorreoList(listaCorreo);
 
 		if (direccionDemandado != null)
 			casoEquipoCaso.setDireccion(direccionDemandado.getStringCellValue());
@@ -2654,7 +3151,7 @@ public class FileUploadController {
 		casoEquipoCaso.setEquipoCaso(equipoCaso);
 		casoEquipoCaso.setActivo(Parametros.getContactoActivo());
 		if (tipoPersona.getStringCellValue() != null && tipoPersona != null) {
-			if (tipoPersona.getStringCellValue().equalsIgnoreCase("Persona Jur�dica")) {
+			if (tipoPersona.getStringCellValue().equalsIgnoreCase("Persona Jurídica")) {
 				casoEquipoCaso.setPersonajuridica(Parametros.getIsPersonaJuridica());
 			} else if (tipoPersona.getStringCellValue().equalsIgnoreCase("Persona Natural")) {
 				casoEquipoCaso.setPersonajuridica(Parametros.getNotPersonaJuridica());
@@ -2732,7 +3229,7 @@ public class FileUploadController {
 			numeroRadicado = rowRadicado.getCell(3);
 			intanciaRadicado = rowRadicado.getCell(8);
 		}
-
+		
 		if (intanciaRadicado != null && !intanciaRadicado.getStringCellValue().isEmpty()) {
 			instanciaObjeto.setNombre(intanciaRadicado.getStringCellValue());
 			instanciaObjeto = instanciaService.consultarCodigoInstancia(instanciaObjeto);
@@ -3223,4 +3720,7 @@ public class FileUploadController {
 		if (!correosList.isEmpty())
 			equipoCaso.setCorreoList(correosList);
 	}
+	
+	
+
 }

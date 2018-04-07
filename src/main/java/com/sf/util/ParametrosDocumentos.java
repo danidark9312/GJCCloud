@@ -37,6 +37,35 @@ public class ParametrosDocumentos {
 	public static String getParentescoOtro() {
 		return properties.getString("PARAMETRO.PARENTESCO.OTRO");
 	}
+	
+	public static String getParentescoNietos() {
+		return properties.getString("PARAMETRO.PARENTESCO.NIETOS");
+	}
+	
+	public static String getParentescoTios() {
+		return properties.getString("PARAMETRO.PARENTESCO.TIOS");
+	}
+	
+	public static String getParentescoSobrinos() {
+		return properties.getString("PARAMETRO.PARENTESCO.SOBRINOS");
+	}
+	
+	public static String getParentescoBisnietos() {
+		return properties.getString("PARAMETRO.PARENTESCO.BISNIETOS");
+	}
+	
+	public static String getParentescoPrimos() {
+		return properties.getString("PARAMETRO.PARENTESCO.PRIMOS");
+	}
+	
+	public static String getParentescoDanmificados() {
+		return properties.getString("PARAMETRO.PARENTESCO.DANMIFICADOS");
+	}
+	
+	public static String getParentescoBisabuelos() {
+		return properties.getString("PARAMETRO.PARENTESCO.BISABUELOS");
+	}
+	
 
 	public static String getDocumentosParentescoEsposo() {
 		return properties.getString("PARAMETRO.DOCUMENTOS.PARENTESCO.ESPOSO");
@@ -56,6 +85,34 @@ public class ParametrosDocumentos {
 	
 	public static String getDocumentosParentescoAbuelo() {
 		return properties.getString("PARAMETRO.DOCUMENTOS.PARENTESCO.ABUELO");
+	}
+	
+	public static String getDocumentosParentescoNietos() {
+		return properties.getString("PARAMETRO.DOCUMENTOS.PARENTESCO.NIETO");
+	}
+	
+	public static String getDocumentosParentescoTio() {
+		return properties.getString("PARAMETRO.DOCUMENTOS.PARENTESCO.TIO");
+	}
+	
+	public static String getDocumentosParentescoSobrinos() {
+		return properties.getString("PARAMETRO.DOCUMENTOS.PARENTESCO.SOBRINOS");
+	}
+	
+	public static String getDocumentosParentescoBisnietos() {
+		return properties.getString("PARAMETRO.DOCUMENTOS.PARENTESCO.BISNIETOS");
+	}
+	
+	public static String getDocumentosParentescoPrimos() {
+		return properties.getString("PARAMETRO.DOCUMENTOS.PARENTESCO.PRIMOS");
+	}
+	
+	public static String getDocumentosParentesco3danmificados() {
+		return properties.getString("PARAMETRO.DOCUMENTOS.PARENTESCO.3DAMNIFICADOS");
+	}
+	
+	public static String getDocumentosParentescoBisabuelos() {
+		return properties.getString("PARAMETRO.DOCUMENTOS.PARENTESCO.BISABUELOS");
 	}
 	
 	public static String getDocumentosParentescoOtro() {

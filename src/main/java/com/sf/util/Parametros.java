@@ -194,6 +194,37 @@ public class Parametros{
     	return properties.getString("PARENTESCO.OTRO.A");
     }
     
+    //Modificacion adición de nuevos parentestos
+    public static String getParentescoNieto(){
+    	return properties.getString("PARENTESCO.NIETO.A");
+    }
+    
+    public static String getParentescoSobrinos(){
+    	return properties.getString("PARENTESCO.SOBRINOS.A");
+    }
+    
+    public static String getParentescoBisnietos(){
+    	return properties.getString("PARENTESCO.BISNIETOS.A");
+    }
+    
+    public static String getParentescoPrimos(){
+    	return properties.getString("PARENTESCO.PRIMOS.A");
+    }
+    
+    public static String getParentesco3rosDamnificados(){
+    	return properties.getString("PARENTESCO.3DAMNIFICADOS.A");
+    }
+    
+    public static String getParentescoBisabuelos(){
+    	return properties.getString("PARENTESCO.BISABUELOS.A");
+    }
+    
+    public static String getParentescoTio(){
+    	return properties.getString("PARENTESCO.NIETO.A");
+    }    
+    
+    
+    
     public static String getIsContacto(){
     	return properties.getString("CONTACTO.ISCONTACTO");
     }
